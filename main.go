@@ -49,8 +49,8 @@ var (
 )
 
 func main() {
-	//defer profile.Start(profile.CPUProfile, profile.ProfilePath(".")).Stop()
-	//args
+	// defer profile.Start(profile.CPUProfile, profile.ProfilePath(".")).Stop()
+	// args
 	kong.Parse(&CLI,
 		kong.Name("photon"),
 		kong.Description("Fast RSS reader as light as a photon"),
@@ -61,11 +61,11 @@ func main() {
 		}))
 
 	if isatty.IsTerminal(os.Stdout.Fd()) {
-		//don't log to terminal
+		// don't log to terminal
 		log.SetOutput(io.Discard)
 		os.Stdout, _ = os.Open(os.DevNull)
 	} else {
-		//log to redirected stdout
+		// log to redirected stdout
 		log.SetOutput(os.Stdout)
 	}
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -86,7 +86,7 @@ func main() {
 		CLI.Paths = []string{defaultConf}
 	}
 
-	//photon
+	// photon
 	grid := &Grid{Columns: 5}
 	cb = Callbacks{grid: grid}
 	var err error
@@ -108,7 +108,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	//tui
+	// tui
 	tcell.SetEncodingFallback(tcell.EncodingFallbackASCII)
 	s, err := tcell.NewScreen()
 	if err != nil {
@@ -181,9 +181,9 @@ func main() {
 	var fullRedraw bool
 	sixelScreen := &imgproc.SixelScreen{}
 	for {
-		//Begin synchronized update (BSU) ESC P = 1 s ESC \
+		// Begin synchronized update (BSU) ESC P = 1 s ESC \
 		os.Stderr.Write([]byte("\033P=1s\033\\"))
-		//draw main widget + status bar
+		// draw main widget + status bar
 		var widgetStatus richtext
 		switch cb.State() {
 		case states.Normal, states.Search:
@@ -203,7 +203,7 @@ func main() {
 				widgetStatus...,
 			),
 		)
-		//command line cursor
+		// command line cursor
 		if commandFocus {
 			s.SetContent(len(command), int(ctx.Rows-1), ' ', nil, tcell.StyleDefault.Reverse(true))
 		}
@@ -212,12 +212,12 @@ func main() {
 		} else {
 			s.Show()
 		}
-		//draw sixels
+		// draw sixels
 		sixelScreen.Write(os.Stderr)
 		sixelScreen.Reset()
-		//End synchronized update (ESU) ESC P = 2 s ESC \
+		// end synchronized update (ESU) ESC P = 2 s ESC \
 		os.Stderr.Write([]byte("\033P=2s\033\\"))
-		//wait for another redraw event or quit
+		// wait for another redraw event or quit
 		select {
 		case <-ctx.Done():
 			return
@@ -240,7 +240,7 @@ func redraw(full bool) {
 	redrawCh <- full
 }
 
-//converts tcell.EventKey to keybindings.KeyEvent
+// converts tcell.EventKey to keybindings.KeyEvent
 func newKeyEvent(e *tcell.EventKey) keybindings.KeyEvent {
 	var mod keybindings.Modifiers
 	switch {
@@ -290,7 +290,7 @@ func newKeyEvent(e *tcell.EventKey) keybindings.KeyEvent {
 }
 
 func defaultKeyBindings(s tcell.Screen, grid *Grid, quit *context.CancelFunc) {
-	//NormalState
+	// NormalState
 	photon.KeyBindings.Add(states.Normal, "q", func() error {
 		if quit != nil {
 			q := *quit
@@ -372,7 +372,7 @@ func defaultKeyBindings(s tcell.Screen, grid *Grid, quit *context.CancelFunc) {
 		redraw(false)
 		return nil
 	})
-	//copy item link
+	// copy item link
 	photon.KeyBindings.Add(states.Normal, "yy", func() error {
 		if SelectedCard == nil {
 			return nil
@@ -380,7 +380,7 @@ func defaultKeyBindings(s tcell.Screen, grid *Grid, quit *context.CancelFunc) {
 		osc52(SelectedCard.Item.Link)
 		return nil
 	})
-	//copy item image
+	// copy item image
 	/*
 		photon.KeyBindings.Add(states.Normal, "yi", func() error {
 			if SelectedCard == nil {
@@ -400,22 +400,22 @@ func defaultKeyBindings(s tcell.Screen, grid *Grid, quit *context.CancelFunc) {
 			return nil
 		})
 	*/
-	//download media
+	// download media
 	photon.KeyBindings.Add(states.Normal, "dm", func() error {
 		SelectedCard.DownloadMedia()
 		return nil
 	})
-	//download link
+	// download link
 	photon.KeyBindings.Add(states.Normal, "dl", func() error {
 		SelectedCard.DownloadLink()
 		return nil
 	})
-	//download image
+	// download image
 	photon.KeyBindings.Add(states.Normal, "di", func() error {
 		SelectedCard.DownloadImage()
 		return nil
 	})
-	//move selectedCard
+	// move selectedCard
 	photon.KeyBindings.Add(states.Normal, "h", func() error {
 		grid.SelectedChildMoveLeft()
 		redraw(false)
@@ -485,7 +485,7 @@ func defaultKeyBindings(s tcell.Screen, grid *Grid, quit *context.CancelFunc) {
 		return nil
 	})
 
-	//SearchState
+	// SearchState
 	photon.KeyBindings.Add(states.Search, "<enter>", func() error {
 		commandFocus = false
 		redraw(false)
@@ -506,7 +506,7 @@ func defaultKeyBindings(s tcell.Screen, grid *Grid, quit *context.CancelFunc) {
 		return nil
 	})
 
-	//ArticleState
+	// ArticleState
 	photon.KeyBindings.Add(states.Article, "<esc>", func() error {
 		openedArticle = nil
 		photon.OpenedArticle = nil
@@ -522,7 +522,7 @@ func defaultKeyBindings(s tcell.Screen, grid *Grid, quit *context.CancelFunc) {
 		return nil
 	})
 	photon.KeyBindings.Add(states.Normal, "yy", func() error {
-		//copy article link
+		// copy article link
 		if openedArticle == nil {
 			return nil
 		}

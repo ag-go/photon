@@ -1,4 +1,4 @@
-//Package ls implements a key-value store for lua (like localStorage in js)
+// Package ls implements a key-value store for lua (like localStorage in js)
 package ls
 
 import (
@@ -55,7 +55,7 @@ func (ls *LocalStorage) Close() error {
 	return ls.db.Close()
 }
 
-//stores key/value pair
+// stores key/value pair
 func (ls *LocalStorage) setItem(L *lua.LState) int {
 	key := L.CheckString(1)
 	value := L.CheckString(2)
@@ -67,11 +67,11 @@ func (ls *LocalStorage) setItem(L *lua.LState) int {
 	return 0
 }
 
-//returns the value in front of key
+// returns the value in front of key
 func (ls *LocalStorage) getItem(L *lua.LState) int {
 	key := L.CheckString(1)
 	db := ls.open()
-	var val lua.LValue = lua.LNil
+	var val lua.LValue
 	v, err := db.Get([]byte(key), nil)
 	if err == leveldb.ErrNotFound {
 		return 0
@@ -84,7 +84,7 @@ func (ls *LocalStorage) getItem(L *lua.LState) int {
 	return 1
 }
 
-//returns the number of stored items(data)
+// returns the number of stored items(data)
 func (ls *LocalStorage) length(L *lua.LState) int {
 	db := ls.open()
 	var length int
@@ -101,7 +101,7 @@ func (ls *LocalStorage) length(L *lua.LState) int {
 	return 1
 }
 
-//removes given key with its value
+// removes given key with its value
 func (ls *LocalStorage) removeItem(L *lua.LState) int {
 	key := L.CheckString(1)
 	db := ls.open()
@@ -112,7 +112,7 @@ func (ls *LocalStorage) removeItem(L *lua.LState) int {
 	return 0
 }
 
-//deletes everything from the storage
+// deletes everything from the storage
 func (ls *LocalStorage) clear(L *lua.LState) int {
 	db := ls.open()
 	var length int

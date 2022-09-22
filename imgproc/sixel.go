@@ -20,7 +20,7 @@ var (
 	sixelFooter = []byte{0x1b, 0x5c}
 )
 
-//SixelScreen collects sixel data and it's positions then to be printed to the screen
+// SixelScreen collects sixel data and it's positions then to be printed to the screen
 type SixelScreen struct {
 	capacity, length int
 	data             [][]byte
@@ -33,12 +33,12 @@ func (ss *SixelScreen) Add(s *Sixel, x, y, from, to int) {
 	if to-from <= 0 {
 		return
 	}
-	//cursor/image position
+	// cursor/image position
 	ss.append([]byte(fmt.Sprintf("\033[%d;%dH", y, x)))
 	ss.append(sixelHeader)
-	//palette
+	// palette
 	ss.append(s.palette)
-	//sixel row data
+	// sixel row data
 	for i := from; i < to; i++ {
 		ss.append(s.rows[i])
 	}
@@ -64,8 +64,8 @@ func (ss *SixelScreen) Write(w io.Writer) {
 	}
 }
 
-//Sixel are the bytes of a image encoded in sixel format
-//it has the ability to draw just specified rows of the image
+// Sixel are the bytes of a image encoded in sixel format
+// it has the ability to draw just specified rows of the image
 type Sixel struct {
 	Bounds  image.Rectangle
 	palette []byte
@@ -120,7 +120,8 @@ func EncodeSixel(nc int, img *image.Paletted) *Sixel {
 				w.Write([]byte{0x24})
 			}
 			// select color (#%d)
-			if n >= 100 {
+			switch {
+			case n >= 100:
 				digit1 := n / 100
 				digit2 := (n - digit1*100) / 10
 				digit3 := n % 10
@@ -128,11 +129,11 @@ func EncodeSixel(nc int, img *image.Paletted) *Sixel {
 				c2 := byte(0x30 + digit2)
 				c3 := byte(0x30 + digit3)
 				w.Write([]byte{0x23, c1, c2, c3})
-			} else if n >= 10 {
+			case n >= 10:
 				c1 := byte(0x30 + n/10)
 				c2 := byte(0x30 + n%10)
 				w.Write([]byte{0x23, c1, c2})
-			} else {
+			default:
 				w.Write([]byte{0x23, byte(0x30 + n)})
 			}
 			cnt := 0
@@ -146,13 +147,14 @@ func EncodeSixel(nc int, img *image.Paletted) *Sixel {
 					for ; cnt > 255; cnt -= 255 {
 						w.Write([]byte{0x21, 0x32, 0x35, 0x35, s})
 					}
-					if cnt == 1 {
+					switch {
+					case cnt == 1:
 						w.Write([]byte{s})
-					} else if cnt == 2 {
+					case cnt == 2:
 						w.Write([]byte{s, s})
-					} else if cnt == 3 {
+					case cnt == 3:
 						w.Write([]byte{s, s, s})
-					} else if cnt >= 100 {
+					case cnt >= 100:
 						digit1 := cnt / 100
 						digit2 := (cnt - digit1*100) / 10
 						digit3 := cnt % 10
@@ -161,12 +163,12 @@ func EncodeSixel(nc int, img *image.Paletted) *Sixel {
 						c3 := byte(0x30 + digit3)
 						// DECGRI (!): - Graphics Repeat Introducer
 						w.Write([]byte{0x21, c1, c2, c3, s})
-					} else if cnt >= 10 {
+					case cnt >= 10:
 						c1 := byte(0x30 + cnt/10)
 						c2 := byte(0x30 + cnt%10)
 						// DECGRI (!): - Graphics Repeat Introducer
 						w.Write([]byte{0x21, c1, c2, s})
-					} else if cnt > 0 {
+					case cnt > 0:
 						// DECGRI (!): - Graphics Repeat Introducer
 						w.Write([]byte{0x21, byte(0x30 + cnt), s})
 					}
@@ -181,13 +183,14 @@ func EncodeSixel(nc int, img *image.Paletted) *Sixel {
 				for ; cnt > 255; cnt -= 255 {
 					w.Write([]byte{0x21, 0x32, 0x35, 0x35, s})
 				}
-				if cnt == 1 {
+				switch {
+				case cnt == 1:
 					w.Write([]byte{s})
-				} else if cnt == 2 {
+				case cnt == 2:
 					w.Write([]byte{s, s})
-				} else if cnt == 3 {
+				case cnt == 3:
 					w.Write([]byte{s, s, s})
-				} else if cnt >= 100 {
+				case cnt >= 100:
 					digit1 := cnt / 100
 					digit2 := (cnt - digit1*100) / 10
 					digit3 := cnt % 10
@@ -196,12 +199,12 @@ func EncodeSixel(nc int, img *image.Paletted) *Sixel {
 					c3 := byte(0x30 + digit3)
 					// DECGRI (!): - Graphics Repeat Introducer
 					w.Write([]byte{0x21, c1, c2, c3, s})
-				} else if cnt >= 10 {
+				case cnt >= 10:
 					c1 := byte(0x30 + cnt/10)
 					c2 := byte(0x30 + cnt%10)
 					// DECGRI (!): - Graphics Repeat Introducer
 					w.Write([]byte{0x21, c1, c2, s})
-				} else if cnt > 0 {
+				case cnt > 0:
 					// DECGRI (!): - Graphics Repeat Introducer
 					w.Write([]byte{0x21, byte(0x30 + cnt), s})
 				}

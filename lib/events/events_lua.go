@@ -37,17 +37,17 @@ func eventsSubscribe(L *lua.LState) int {
 }
 
 func registerEvents(L *lua.LState) {
-	//Init
+	// Init
 	mt := L.NewTypeMetatable(string(EventTypeInit))
 	L.SetGlobal(string(EventTypeInit), mt)
 	L.SetField(mt, "__index", L.SetFuncs(L.NewTable(), nil))
 
-	//FeedsDownloaded
+	// FeedsDownloaded
 	mt = L.NewTypeMetatable(string(EventTypeFeedsDownloaded))
 	L.SetGlobal(string(EventTypeInit), mt)
 	L.SetField(mt, "__index", L.SetFuncs(L.NewTable(), nil))
 
-	//RunMediaStart
+	// RunMediaStart
 	methods := map[string]lua.LGFunction{
 		"link": eventLink,
 		"card": eventCard,
@@ -56,17 +56,17 @@ func registerEvents(L *lua.LState) {
 	L.SetGlobal(string(EventTypeRunMediaStart), mt)
 	L.SetField(mt, "__index", L.SetFuncs(L.NewTable(), methods))
 
-	//RunMediaEnd
+	// RunMediaEnd
 	mt = L.NewTypeMetatable(string(EventTypeRunMediaEnd))
 	L.SetGlobal(string(EventTypeRunMediaEnd), mt)
 	L.SetField(mt, "__index", L.SetFuncs(L.NewTable(), methods))
 
-	//ArticleOpened
+	// ArticleOpened
 	mt = L.NewTypeMetatable(string(EventTypeArticleOpened))
 	L.SetGlobal(string(EventTypeArticleOpened), mt)
 	L.SetField(mt, "__index", L.SetFuncs(L.NewTable(), methods))
 
-	//LinkOpened
+	// LinkOpened
 	mt = L.NewTypeMetatable(string(EventTypeLinkOpened))
 	L.SetGlobal(string(EventTypeLinkOpened), mt)
 	L.SetField(mt, "__index", L.SetFuncs(L.NewTable(), methods))

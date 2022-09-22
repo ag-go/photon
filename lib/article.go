@@ -17,7 +17,7 @@ type Article struct {
 }
 
 func newArticle(card *Card, client *http.Client) (*Article, error) {
-	req, err := http.NewRequest("GET", card.Item.Link, nil)
+	req, err := http.NewRequest(http.MethodGet, card.Item.Link, nil)
 	if err != nil {
 		return nil, err
 	}

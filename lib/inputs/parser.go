@@ -5,7 +5,7 @@ import (
 	"io"
 )
 
-//Parse parses the photon config input, and retunts the list of urls/commands
+// Parse parses the photon config input, and retunts the list of urls/commands
 func Parse(r io.Reader) (Inputs, error) {
 	s := &scanner{l: lex(r)}
 	urls, err := parseConf(s)

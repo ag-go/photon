@@ -182,7 +182,7 @@ func (card *Card) DownloadImage() {
 }
 
 func (card *Card) downloadLinks(name string, links []string) error {
-	//get download path
+	// get download path
 	downloadPath := card.photon.downloadPath
 	if strings.Contains(downloadPath, "$HOME") {
 		usr, err := user.Current()
@@ -191,15 +191,15 @@ func (card *Card) downloadLinks(name string, links []string) error {
 		}
 		downloadPath = strings.ReplaceAll(downloadPath, "$HOME", usr.HomeDir)
 	}
-	//create download path
+	// create download path
 	if _, err := os.Stat(downloadPath); os.IsNotExist(err) {
 		if err := os.MkdirAll(downloadPath, 0x755); err != nil {
 			return err
 		}
 	}
 	for _, link := range links {
-		//get response
-		req, err := http.NewRequest("GET", link, nil)
+		// get response
+		req, err := http.NewRequest(http.MethodGet, link, nil)
 		if err != nil {
 			return err
 		}
@@ -221,7 +221,7 @@ func (card *Card) downloadLinks(name string, links []string) error {
 		if len(exts) > 0 {
 			name += "." + exts[0]
 		}
-		//write data to file
+		// write data to file
 		f, err := os.Create(filepath.Join(downloadPath, sanitize.Name(name)))
 		if err != nil {
 			return err

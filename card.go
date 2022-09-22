@@ -30,8 +30,7 @@ const (
 
 type Card struct {
 	*lib.Card
-	sixelData *imgproc.Sixel
-	//isOnScreen        func(*lib.Card)
+	sixelData        *imgproc.Sixel
 	previousImagePos image.Point
 	previousSelected bool
 }
@@ -70,7 +69,7 @@ func (c *Card) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScree
 		return
 	}
 
-	//header
+	// header
 	for x := ctx.X; x < ctx.Width+ctx.X; x++ {
 		for y := ctx.Height - headerHeight + ctx.Y; y < ctx.Height+ctx.Y; y++ {
 			s.SetContent(x, y, ' ', nil, style)
@@ -80,7 +79,7 @@ func (c *Card) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScree
 	drawLine(s, ctx.X+1, ctx.Height-headerHeight+ctx.Y+2, ctx.Width-3, c.Feed.Title, style.Italic(true))
 	drawLine(s, ctx.X+1, ctx.Height-headerHeight+ctx.Y+3, ctx.Width-3, htime.Difference(time.Now(), *c.Item.PublishedParsed), style.Italic(true))
 
-	if c.DownloadImage(ctx, s) {
+	if c.DownloadImage(ctx) {
 		c.previousImagePos = image.Point{-2, -2}
 		c.swapImageRegion(ctx, s)
 		return
@@ -97,11 +96,11 @@ func (c *Card) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScree
 	c.previousSelected = selected
 	switch {
 	case newImagePos.Y < 0:
-		//if the image upper left corner is outside of the screen leave some upper sixel rows
+		// if the image upper left corner is outside of the screen leave some upper sixel rows
 		leaveRows := int(float64(ctx.YCellPixels)*float64(-newImagePos.Y)/6.0) + 3
 		sixelScreen.Add(c.sixelData, newImagePos.X, 0, leaveRows, -1)
 	case ctx.YCellPixels*newImagePos.Y+c.sixelData.Bounds.Dy() > int(ctx.YPixel):
-		//if the image lover pars is outside of the screen leave some lower sixel rows
+		// if the image lover pars is outside of the screen leave some lower sixel rows
 		leaveRows := ((ctx.YCellPixels*newImagePos.Y+c.sixelData.Bounds.Dy())-int(ctx.YPixel))/6 + 2
 		sixelScreen.Add(c.sixelData, newImagePos.X, newImagePos.Y, 0, c.sixelData.Rows()-leaveRows)
 	default:
@@ -127,22 +126,22 @@ func (c *Card) swapImageRegion(ctx Context, s tcell.Screen) {
 	}
 }
 
-func (c *Card) DownloadImage(ctx Context, s tcell.Screen) bool {
+func (c *Card) DownloadImage(ctx Context) bool {
 	if c.ItemImage != nil || c.Item.Image == nil {
-		c.makeSixel(ctx, s)
+		c.makeSixel(ctx)
 		return false
 	}
 	photon.ImgDownloader.Download(
 		c.Item.Image.URL,
 		func(i interface{}) {
 			c.ItemImage = imgproc.NewImageResizer(i)
-			c.makeSixel(ctx, s)
+			c.makeSixel(ctx)
 		},
 	)
 	return true
 }
 
-func (c *Card) makeSixel(ctx Context, s tcell.Screen) {
+func (c *Card) makeSixel(ctx Context) {
 	if c.sixelData != nil || c.ItemImage == nil {
 		return
 	}
@@ -155,9 +154,7 @@ func (c *Card) makeSixel(ctx Context, s tcell.Screen) {
 		targetHeight,
 		func(s *imgproc.Sixel) {
 			c.sixelData = s
-			//if c.isOnScreen(c.Card) {
 			redraw(false)
-			//}
 		},
 	)
 }

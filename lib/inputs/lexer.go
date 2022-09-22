@@ -40,13 +40,13 @@ func (i item) String() string {
 	return fmt.Sprintf("%q", i.val)
 }
 
-//stateFn represents the state of the scanner as a function that returns the next state.
+// stateFn represents the state of the scanner as a function that returns the next state.
 type stateFn func(*lexer) stateFn
 
 // lexer holds the state of the scanner.
 type lexer struct {
 	input              *bufio.Reader   // the data being scanned.
-	buf                strings.Builder //the data already scanned
+	buf                strings.Builder // the data already scanned
 	line, pos, prevpos int
 	items              chan item // channel of scanned items.
 }
@@ -60,7 +60,7 @@ func lex(input io.Reader) *lexer {
 	return l
 }
 
-//run lexes the input by executing state functions until the state is nil.
+// run lexes the input by executing state functions until the state is nil.
 func (l *lexer) run() {
 	for state := lexStart; state != nil; {
 		state = state(l)
@@ -111,14 +111,14 @@ func (l *lexer) unread() {
 	}
 }
 
-//peek returns but does not consume the next rune in the input.
+// peek returns but does not consume the next rune in the input.
 func (l *lexer) peek() rune {
 	r := l.read()
 	l.unread()
 	return r
 }
 
-//acceptRun consumes a run of runes from the valid set.
+// acceptRun consumes a run of runes from the valid set.
 func (l *lexer) accept(valid string) {
 	for strings.ContainsRune(valid, l.read()) {
 	}
@@ -130,7 +130,7 @@ func (l *lexer) acceptWhitespace() {
 	l.buf.Reset()
 }
 
-//acceptToLineBreak reads entire string to line break
+// acceptToLineBreak reads entire string to line break
 func (l *lexer) acceptToLineBreak() {
 	for {
 		if ch := l.read(); ch == eof {
@@ -142,7 +142,7 @@ func (l *lexer) acceptToLineBreak() {
 	}
 }
 
-//readLetters reads all runes that are letters
+// readLetters reads all runes that are letters
 func (l *lexer) readLetters() string {
 	var buf strings.Builder
 	for {
@@ -219,9 +219,9 @@ func lexComment(l *lexer) stateFn {
 	return lexStart
 }
 
-//errorf returns an error token and terminates the scan
-//by passing back a nil pointer that will be the next
-//state, terminating l.run.
+// errorf returns an error token and terminates the scan
+// by passing back a nil pointer that will be the next
+// state, terminating l.run.
 func (l *lexer) errorf(format string, args ...interface{}) stateFn {
 	l.items <- item{
 		itemError,

@@ -77,7 +77,7 @@ func (p *Photon) photonLoader(L *lua.LState) int {
 	}
 	mod := L.SetFuncs(L.NewTable(), exports)
 
-	//types and fields
+	// types and fields
 	p.registerTypeSelectedCard(L)
 	L.SetField(mod, "cards", newCards(&p.Cards, L))
 	L.SetField(mod, "visibleCards", newCards(&p.VisibleCards, L))
@@ -86,7 +86,7 @@ func (p *Photon) photonLoader(L *lua.LState) int {
 	L.SetField(mod, "keybindings", keybindings.NewLValue(L, p.KeyBindings))
 	L.SetField(mod, "feedInputs", inputs.New(L, p.feedInputs))
 
-	//constants
+	// constants
 	L.SetField(mod, "Normal", lua.LNumber(states.Normal))
 	L.SetField(mod, "Article", lua.LNumber(states.Article))
 	L.SetField(mod, "Search", lua.LNumber(states.Search))

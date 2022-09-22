@@ -67,8 +67,8 @@ func cardsSet(L *lua.LState) int {
 func cardsDel(L *lua.LState) int {
 	cards := checkCards(L)
 	index := L.ToInt(2)
-	newCards := append((*cards)[:index-1], (*cards)[index:]...)
-	*cards = newCards
+	copy((*cards)[index:], (*cards)[index+1:])
+	(*cards) = (*cards)[:len((*cards))-1]
 	return 0
 }
 
@@ -76,7 +76,9 @@ func cardsAdd(L *lua.LState) int {
 	cards := checkCards(L)
 	index := L.ToInt(2)
 	card := checkCard(L, 3)
-	(*cards) = append((*cards)[:index-1], append([]*Card{card}, (*cards)[index-1:]...)...)
+	(*cards) = append(*cards, nil)
+	copy((*cards)[index+1:], (*cards)[index:])
+	(*cards)[index] = card
 	return 0
 }
 

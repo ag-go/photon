@@ -31,12 +31,12 @@ func (e *Extractor) NewMedia(link string) (*Media, error) {
 	if err != nil {
 		return nil, fmt.Errorf("media link - getting content-type: %w ", err)
 	}
-	//if link is a image, video, or torrent, don't run the extractor
+	// if link is a image, video, or torrent, don't run the extractor
 	if e.determineCommand(ct) != "" {
 		return &Media{e: e, OriginalLink: link, Links: []string{link}, ContentType: ct}, nil
 	}
 	cmd := strings.Split(strings.TrimSpace(strings.ReplaceAll(e.ExtractorCmd, "%", link)), " ")
-	output, err := exec.Command(cmd[0], cmd[1:]...).Output()
+	output, err := exec.Command(cmd[0], cmd[1:]...).Output() //nolint:gosec
 	if err != nil {
 		return nil, fmt.Errorf("extracting media link [%s]: %w (%s)", link, err, string(output))
 	}
@@ -63,7 +63,7 @@ func (e *Extractor) getContentType(link string) (string, error) {
 	if strings.HasPrefix(link, "magnet:") {
 		return "magnet-link", nil
 	}
-	req, err := http.NewRequest("HEAD", link, nil)
+	req, err := http.NewRequest(http.MethodHead, link, nil)
 	if err != nil {
 		return "", fmt.Errorf("creating HEAD request for content-type detection: %w", err)
 	}
@@ -78,7 +78,7 @@ func (e *Extractor) getContentType(link string) (string, error) {
 	return contentType, nil
 }
 
-//determineCommand returns videoCmd or imgCmd by the content-type
+// determineCommand returns videoCmd or imgCmd by the content-type
 func (e *Extractor) determineCommand(contentType string) (command string) {
 	switch {
 	case strings.HasPrefix(contentType, "video/"), contentType == "image/gif", strings.HasSuffix(contentType, "mpegurl"):
@@ -97,9 +97,9 @@ func (media *Media) Run() {
 		log.Println("ERROR: could not determine content-type:", media.ContentType)
 		return
 	}
-	//run command with downloaded torrent file
+	// run command with downloaded torrent file
 	if media.ContentType == "application/x-bittorrent" {
-		req, err := http.NewRequest("GET", media.Links[0], nil)
+		req, err := http.NewRequest(http.MethodGet, media.Links[0], nil)
 		if err != nil {
 			log.Printf("ERROR: downloading torrent file - creating http request: %s", err)
 			return
@@ -124,34 +124,34 @@ func (media *Media) Run() {
 			return
 		}
 		cmd := strings.Split(strings.ReplaceAll(command, "%", f.Name()), " ")
-		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil {
+		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil { //nolint:gosec
 			log.Printf("ERROR: running media command (%s): %s", strings.Join(cmd, " "), err)
 		}
 		return
 	}
 
-	//run command with the media link
+	// run command with the media link
 	if strings.Contains(command, "%") {
 		args := media.Links[0]
 		if len(media.Links) > 1 {
 			args = fmt.Sprintf("%s --audio-file=%s", media.Links[0], media.Links[1])
 		}
 		cmd := strings.Split(strings.ReplaceAll(command, "%", args), " ")
-		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil {
+		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil { //nolint:gosec
 			log.Printf("ERROR: running media command (%s): %s", strings.Join(cmd, " "), err)
 		}
 		return
 	}
-	//run command with the direct item link
+	// run command with the direct item link
 	if strings.Contains(command, "$") {
 		cmd := strings.Split(strings.ReplaceAll(command, "$", media.OriginalLink), " ")
-		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil {
+		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil { //nolint:gosec
 			log.Printf("ERROR: running media command (%s): %s", strings.Join(cmd, " "), err)
 		}
 		return
 	}
-	//run command and pipe the media data to it's stdin
-	req, err := http.NewRequest("GET", media.Links[0], nil)
+	// run command and pipe the media data to it's stdin
+	req, err := http.NewRequest(http.MethodGet, media.Links[0], nil)
 	if err != nil {
 		log.Println("ERROR: creating GET request for media link:", err)
 		return
@@ -162,7 +162,7 @@ func (media *Media) Run() {
 		return
 	}
 	cmd := strings.Split(command, " ")
-	c := exec.Command(cmd[0], cmd[1:]...)
+	c := exec.Command(cmd[0], cmd[1:]...) //nolint:gosec
 	stdin, err := c.StdinPipe()
 	if err != nil {
 		log.Println("ERROR: getting stdin of command:", err)

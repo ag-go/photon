@@ -61,17 +61,17 @@ type WinSize struct {
 }
 
 func GetWinSize() (sz WinSize, err error) {
-	//TIOCGWINSZ syscall
+	// TIOCGWINSZ syscall
 	for fd := uintptr(0); fd < 3; fd++ {
 		if err = ioctl(fd, tiocgwinsz, uintptr(unsafe.Pointer(&sz))); err == nil && sz.XPixel != 0 && sz.YPixel != 0 {
 			return
 		}
 	}
-	//if pixels are 0, try CSI 14
+	// if pixels are 0, try CSI 14
 	if sz.XPixel == 0 || sz.YPixel == 0 {
 		fmt.Printf("\033[18t")
 		fmt.Scanf("\xb1[%d;%dt", &sz.Rows, &sz.Cols)
-		//get terminal resolution
+		// get terminal resolution
 		fmt.Printf("\033[14t")
 		fmt.Scanf("\033[4;%d;%dt", &sz.YPixel, &sz.XPixel)
 	}

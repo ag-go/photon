@@ -4,3 +4,6 @@ photon
 *.5
 *.7
 *.pprof
+.flatpak-builder/
+build-dir/
+flatpak/

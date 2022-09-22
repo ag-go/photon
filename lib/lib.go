@@ -48,7 +48,7 @@ type Callbacks interface {
 	Move() Move
 }
 
-//used for moving the selected card
+// used for moving the selected card
 type Move interface {
 	Left()
 	Right()
@@ -56,7 +56,7 @@ type Move interface {
 	Down()
 }
 
-//status line text and state
+// status line text and state
 type Status struct {
 	text   string
 	ctx    context.Context
@@ -68,10 +68,7 @@ func New(cb Callbacks, paths []string, options ...Option) (*Photon, error) {
 		KeyBindings: keybindings.New(cb.State),
 		cb:          cb,
 	}
-	feedInputs, err := p.loadFeeds(paths)
-	if err != nil {
-		return nil, err
-	}
+	feedInputs := p.loadFeeds(paths)
 	if feedInputs.Len() == 0 {
 		return nil, fmt.Errorf("no feeds")
 	}
@@ -86,7 +83,7 @@ func New(cb Callbacks, paths []string, options ...Option) (*Photon, error) {
 	}
 	p.mediaExtractor.Client = p.httpClient
 	p.ImgDownloader.client = p.httpClient
-	if err = p.loadPlugins(); err != nil {
+	if err := p.loadPlugins(); err != nil {
 		log.Fatal("ERROR:", err)
 	}
 	events.Emit(&events.Init{})
@@ -137,7 +134,7 @@ func WithImageCache(ic ImageCache) Option {
 	}
 }
 
-func (p *Photon) loadFeeds(paths []string) (*inputs.Inputs, error) {
+func (p *Photon) loadFeeds(paths []string) *inputs.Inputs {
 	var ret []string
 	for _, path := range paths {
 		switch {
@@ -153,15 +150,16 @@ func (p *Photon) loadFeeds(paths []string) (*inputs.Inputs, error) {
 			if err != nil {
 				log.Fatal("ERROR: opening file:", err)
 			}
-			defer f.Close()
 			feeds, err := inputs.Parse(f)
 			if err != nil {
+				f.Close()
 				log.Fatal("ERROR: parsing file:", err)
 			}
+			f.Close()
 			ret = append(ret, feeds...)
 		}
 	}
-	return (*inputs.Inputs)(&ret), nil
+	return (*inputs.Inputs)(&ret)
 }
 
 func (p *Photon) SearchQuery(q string) {
@@ -192,7 +190,7 @@ func (p *Photon) DownloadFeeds() {
 						command = append(command, c)
 					}
 				}
-				cmd := exec.Command(command[0], command[1:]...)
+				cmd := exec.Command(command[0], command[1:]...) //nolint:gosec
 				var stdout bytes.Buffer
 				cmd.Stdout = &stdout
 				if err := cmd.Run(); err != nil {

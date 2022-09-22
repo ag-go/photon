@@ -49,3 +49,7 @@ uninstall:
 	rm -rf $(DESTDIR)$(MANDIR)/man1/photon.1
 	rm -rf $(DESTDIR)$(MANDIR)/man5/photon.5
 	rm -rf $(DESTDIR)$(MANDIR)/man7/photon-lua.7
+
+lint:
+	command -v golangci-lint >/dev/null && continue || go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	golangci-lint run -D errcheck -E gocritic -E misspell -E gosec -E thelper -E unconvert -E unparam -E usestdlibvars -E whitespace -E dupl ./...

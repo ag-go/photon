@@ -93,14 +93,14 @@ func (a *Article) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelSc
 	}
 	contentY := 7
 
-	//header
+	// header
 	drawLinesWordwrap(s, x, 1, articleWidth, 2, a.Title, tcell.StyleDefault.Foreground(tcell.ColorWhiteSmoke).Bold(true))
 	drawLine(s, x, 4, articleWidth, a.SiteName, tcell.StyleDefault)
 
-	//top image
+	// top image
 	switch {
 	case a.TopImage != nil && a.imgSixel == nil:
-		//image isn't null but it isn't yet downloaded
+		// image isn't null but it isn't yet downloaded
 		imgproc.ProcDelete(a)
 		imgproc.Proc(
 			a,
@@ -113,7 +113,7 @@ func (a *Article) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelSc
 			},
 		)
 	case a.TopImage != nil && a.imgSixel != nil:
-		//image is downloaded
+		// image is downloaded
 		if a.scrollOffset*ctx.YCellPixels >= a.imgSixel.Bounds.Dy() {
 			break
 		}
@@ -131,7 +131,7 @@ func (a *Article) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelSc
 			a.underImageRune,
 		)
 	case a.TopImage == nil && a.Article.Article.Image == "" && a.Card.ItemImage != nil:
-		//top image is null, but the item image isn't, do we use that
+		// top image is null, but the item image isn't, do we use that
 		imgproc.ProcDelete(a)
 		imgproc.Proc(
 			a,
@@ -145,7 +145,7 @@ func (a *Article) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelSc
 		)
 	}
 
-	//content
+	// content
 	for i := max(0, a.scrollOffset-imageYCells); i < len(a.contentLines); i++ {
 		line := a.contentLines[i]
 		contentOffset := contentY + max(0, imageYCells-a.scrollOffset)
@@ -155,12 +155,12 @@ func (a *Article) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelSc
 		}
 		a.lastLine = i
 		contentY++
-		if contentOffset >= int(ctx.Height) {
+		if contentOffset >= ctx.Height {
 			break
 		}
 	}
 
-	//status bar text - article state + scroll percentage
+	// status bar text - article state + scroll percentage
 	above := a.scrollOffset
 	below := len(a.contentLines) - a.lastLine - 1
 	statusBarText = richtext{
@@ -203,9 +203,9 @@ type textobject struct {
 	Link  string
 }
 
-func (rt richtext) Len() (lenght int) {
+func (rt richtext) Len() (length int) {
 	for _, to := range rt {
-		lenght += len(to.Text)
+		length += len(to.Text)
 	}
 	return
 }
@@ -357,7 +357,7 @@ func parseArticleContent(node *html.Node) (rt richtext, err error) {
 }
 
 func richtextWordWrap(buf richtext, width int) []richtext {
-	//word wrap with textobjects
+	// word wrap with textobjects
 	var lines []richtext
 	var line richtext
 	var lineLength, wordLength int

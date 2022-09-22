@@ -35,7 +35,7 @@ func newImgDownloader(client *http.Client) *ImgDownloader {
 		receiveCh: make(chan imgDownloadReq, 1024),
 	}
 	reqCh := make(chan imgDownloadReq, 1024)
-	//receiver
+	// receiver
 	go func() {
 		for req := range d.receiveCh {
 			if i, ok := d.imgCache.Load(req.URL); ok {
@@ -50,7 +50,7 @@ func newImgDownloader(client *http.Client) *ImgDownloader {
 			reqCh <- req
 		}
 	}()
-	//download workers
+	// download workers
 	for i := 0; i < runtime.NumCPU(); i++ {
 		go func() {
 			client := d.client
@@ -58,7 +58,7 @@ func newImgDownloader(client *http.Client) *ImgDownloader {
 				client = http.DefaultClient
 			}
 			for req := range reqCh {
-				r, err := http.NewRequest("GET", req.URL, nil)
+				r, err := http.NewRequest(http.MethodGet, req.URL, nil)
 				if err != nil {
 					log.Println("ERROR: creating request for image:", err)
 					continue
@@ -98,9 +98,7 @@ func (d *ImgDownloader) Download(url string, callback func(interface{})) {
 			URL:      url,
 			Callback: callback,
 		}
-	} else {
-		if callback != nil {
-			callback(img)
-		}
+	} else if callback != nil {
+		callback(img)
 	}
 }

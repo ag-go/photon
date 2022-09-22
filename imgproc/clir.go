@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-//global variable that stores if loading opencl returned an error
+// global variable that stores if loading opencl returned an error
 var gotError bool
 
 type ImageResizer interface {
@@ -33,7 +33,7 @@ func NewImageResizer(i interface{}) ImageResizer {
 }
 
 func outSize(origWidth, origHeight, maxWidth, maxHeight uint) (uint, uint) {
-	outWidth, outHeight := origWidth, origHeight
+	var outWidth, outHeight uint
 	// Preserve aspect ratio
 	if origWidth >= origHeight {
 		outHeight = origHeight * maxWidth / origWidth

@@ -40,7 +40,7 @@ func feedLoader(L *lua.LState) int {
 	return 0
 }
 
-//Feed
+// Feed
 
 func newFeed(feed *gofeed.Feed, L *lua.LState) *lua.LUserData {
 	ud := L.NewUserData()
@@ -218,7 +218,7 @@ func feedCustom(L *lua.LState) int {
 	return 1
 }
 
-//Person
+// Person
 func newPerson(p *gofeed.Person, L *lua.LState) *lua.LUserData {
 	ud := L.NewUserData()
 	ud.Value = p

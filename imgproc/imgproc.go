@@ -7,7 +7,7 @@ import (
 	"sync"
 )
 
-//Image Processing, scaling and sixel encoding
+// Image Processing, scaling and sixel encoding
 
 type imageProcReq struct {
 	ident     any
@@ -21,7 +21,7 @@ const numColors = 255
 
 var (
 	imageProcChan = make(chan imageProcReq, 1024)
-	//map that holds cards that are right now processed
+	// map that holds cards that are right now processed
 	imageProcMap sync.Map
 )
 
@@ -33,7 +33,7 @@ func init() {
 
 func imageProcWorker() {
 	for req := range imageProcChan {
-		//if there is a goroutine that already processes this card, then skip
+		// if there is a goroutine that already processes this card, then skip
 		if _, ok := imageProcMap.LoadOrStore(req.ident, struct{}{}); ok {
 			continue
 		}
@@ -49,7 +49,7 @@ func imageProcWorker() {
 	}
 }
 
-//sends a image processing request to the workers
+// sends a image processing request to the workers
 func Proc(
 	ident any,
 	src ImageResizer,
@@ -70,7 +70,7 @@ func ProcDelete(key interface{}) {
 	imageProcMap.Delete(key)
 }
 
-//clears the image map, serves for EventResize
+// clears the image map, serves for EventResize
 func ProcClear() {
 	imageProcMap.Range(func(k, v interface{}) bool {
 		imageProcMap.Delete(k)

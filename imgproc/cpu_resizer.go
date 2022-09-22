@@ -14,15 +14,14 @@ type CPUImageResizer struct {
 func (cir *CPUImageResizer) Release() error { return nil }
 
 func (cir *CPUImageResizer) Resize(maxWidth, maxHeight uint) (image.Image, error) {
-
 	origBounds := cir.img.Bounds()
 	origWidth := origBounds.Dx()
 	origHeight := origBounds.Dy()
 	newWidth, newHeight := outSize(
 		uint(origWidth),
 		uint(origHeight),
-		uint(maxWidth),
-		uint(maxHeight),
+		maxWidth,
+		maxHeight,
 	)
 	rect := image.Rect(0, 0, int(newWidth), int(newHeight))
 	dst := image.NewRGBA(rect)
@@ -38,7 +37,7 @@ func (cir *CPUImageResizer) ResizePaletted(p, maxWidth, maxHeight uint) (*image.
 	if p, ok := img.(*image.Paletted); ok {
 		return p, nil
 	}
-	// make adaptive palette using median cut alogrithm
+	// make adaptive palette using median cut algorithm
 	q := median.Quantizer(p - 1)
 	paletted := q.Paletted(img)
 	draw.Draw(paletted, img.Bounds(), img, image.Point{}, draw.Over)

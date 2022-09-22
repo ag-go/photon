@@ -14,13 +14,13 @@ type Grid struct {
 	FirstChildOffset int
 	LastChildIndex   int
 	LastChildOffset  int
-	RowsCount        int //count of visible rows on the screen
+	RowsCount        int // count of visible rows on the screen
 	childWidth       int
 	childHeight      int
 }
 
 func (g *Grid) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScreen, full bool) (statusBarText richtext) {
-	margin := (int(ctx.Width) % g.Columns) / 2
+	margin := (ctx.Width % g.Columns) / 2
 	if SelectedCard == nil && photon.VisibleCards != nil {
 		SelectedCardPos = image.Point{
 			X: g.FirstChildIndex % g.Columns,
@@ -42,15 +42,15 @@ func (g *Grid) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScree
 			XCellPixels: ctx.XCellPixels,
 			YCellPixels: ctx.YCellPixels,
 		}
-		if chctx.Y >= int(ctx.Height) {
+		if chctx.Y >= ctx.Height {
 			break
 		}
 		g.LastChildIndex = i
 		g.RowsCount = i / g.Columns
-		g.LastChildOffset = chctx.Y + g.childHeight - int(ctx.Height)
+		g.LastChildOffset = chctx.Y + g.childHeight - ctx.Height
 		getCard(child).Draw(chctx, s, sixelScreen, full)
 	}
-	//clear remaining card space
+	// clear remaining card space
 	if g.LastChildIndex == len(photon.VisibleCards)-1 {
 		for i := g.LastChildIndex + 1; i < (g.RowsCount+1)*g.Columns; i++ {
 			X := margin + (i%g.Columns)*g.childWidth
@@ -58,14 +58,14 @@ func (g *Grid) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScree
 			fillArea(s, image.Rect(X, Y, X+g.childWidth, Y+g.childHeight), ' ')
 		}
 	}
-	//set all not visible cards previous position outside
+	// set all not visible cards previous position outside
 	for i := 0; i < len(photon.VisibleCards); i++ {
 		if i >= g.FirstChildIndex && i <= g.LastChildIndex {
 			continue
 		}
 		getCard(photon.VisibleCards[i]).previousImagePos = image.Point{-2, -2}
 	}
-	//download next screen of images
+	// download next screen of images
 	for i := g.LastChildIndex + 1; i < len(photon.VisibleCards) && i < g.LastChildIndex+(g.RowsCount*g.Columns)+1; i++ {
 		child := photon.VisibleCards[i]
 		chctx := Context{
@@ -75,9 +75,9 @@ func (g *Grid) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScree
 			XCellPixels: ctx.XCellPixels,
 			YCellPixels: ctx.YCellPixels,
 		}
-		getCard(child).DownloadImage(chctx, s)
+		getCard(child).DownloadImage(chctx)
 	}
-	//status bar text - scroll percentage
+	// status bar text - scroll percentage
 	above := (g.FirstChildIndex/g.Columns)*g.childHeight - g.FirstChildOffset
 	allRows := int(math.Ceil(float64(len(photon.VisibleCards)) / float64(g.Columns)))
 	below := (allRows-(g.LastChildIndex/g.Columns)-1)*g.childHeight + g.LastChildOffset
