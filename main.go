@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"os/user"
 	"path/filepath"
 	"strings"
 	"time"
@@ -75,11 +74,11 @@ func main() {
 	}
 
 	if len(CLI.Paths) == 0 {
-		usr, err := user.Current()
+		confDir, err := os.UserConfigDir()
 		if err != nil {
 			log.Fatal(err)
 		}
-		defaultConf := filepath.Join(usr.HomeDir, ".config", "photon", "config")
+		defaultConf := filepath.Join(confDir, "photon", "config")
 		if _, err := os.Stat(defaultConf); os.IsNotExist(err) {
 			log.Fatal(err)
 		}

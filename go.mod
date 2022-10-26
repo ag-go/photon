@@ -3,23 +3,23 @@ module git.sr.ht/~ghost08/photon
 go 1.19
 
 require (
-	github.com/alecthomas/kong v0.6.1
+	github.com/alecthomas/kong v0.7.0
 	github.com/cjoudrey/gluahttp v0.0.0-20201111170219-25003d9adfa9
 	github.com/gabriel-vasile/mimetype v1.4.1
 	github.com/gdamore/tcell/v2 v2.5.3
 	github.com/go-shiori/go-readability v0.0.0-20220215145315-dd6828d2f09b
 	github.com/kennygrant/sanitize v1.2.4
 	github.com/mattn/go-isatty v0.0.16
-	github.com/mattn/go-runewidth v0.0.13
+	github.com/mattn/go-runewidth v0.0.14
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/sbani/go-humanizer v0.3.2
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
 	github.com/soniakeys/quant v1.0.0
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/yuin/gopher-lua v0.0.0-20220504180219-658193537a64
-	golang.org/x/exp v0.0.0-20220916125017-b168a2c6b86b
-	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69
-	golang.org/x/net v0.0.0-20220909164309-bea034e7d591
+	golang.org/x/exp v0.0.0-20221026004748-78e5e7837ae6
+	golang.org/x/image v0.1.0
+	golang.org/x/net v0.1.0
 )
 
 require (
@@ -37,7 +37,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.2 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
-	golang.org/x/sys v0.0.0-20220915200043-7b5979e65e41 // indirect
-	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/term v0.1.0 // indirect
+	golang.org/x/text v0.4.0 // indirect
 )

@@ -7,3 +7,4 @@ photon
 .flatpak-builder/
 build-dir/
 flatpak/
+.ccls-cache/

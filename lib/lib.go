@@ -65,7 +65,7 @@ type Status struct {
 
 func New(cb Callbacks, paths []string, options ...Option) (*Photon, error) {
 	p := &Photon{
-		KeyBindings: keybindings.New(cb.State),
+		KeyBindings: keybindings.NewRegistry(cb.State),
 		cb:          cb,
 	}
 	feedInputs := p.loadFeeds(paths)
