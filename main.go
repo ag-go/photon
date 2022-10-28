@@ -59,7 +59,8 @@ func main() {
 			Summary: true,
 		}))
 
-	if isatty.IsTerminal(os.Stdout.Fd()) {
+	isTerminal := isatty.IsTerminal(os.Stdout.Fd())
+	if isTerminal {
 		// don't log to terminal
 		log.SetOutput(io.Discard)
 		os.Stdout, _ = os.Open(os.DevNull)
@@ -97,7 +98,7 @@ func main() {
 		lib.WithMediaTorrentCmd(CLI.TorrentCmd),
 		lib.WithDownloadPath(CLI.DownloadPath),
 	}
-	if err := imgproc.Init(); err != nil {
+	if err := imgproc.Init(!isTerminal); err != nil {
 		log.Printf("INFO: error loading opencl image resizer, falling back to CPU scaling: %s", err)
 	} else {
 		options = append(options, lib.WithImageCache(&imgproc.Cache{}))

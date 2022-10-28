@@ -1,9 +1,9 @@
 // +build linux
 
 #include <dlfcn.h>
-#include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 const char *source = "\n\
@@ -291,64 +291,81 @@ typedef intptr_t cl_context_properties;
 typedef cl_bitfield cl_mem_flags;
 typedef void *cl_mem;
 typedef struct _cl_image_format {
-	cl_uint image_channel_order;
-	cl_uint image_channel_data_type;
+  cl_uint image_channel_order;
+  cl_uint image_channel_data_type;
 } cl_image_format;
 typedef struct _cl_image_desc {
-	cl_uint image_type;
-	size_t image_width;
-	size_t image_height;
-	size_t image_depth;
-	size_t image_array_size;
-	size_t image_row_pitch;
-	size_t image_slice_pitch;
-	cl_uint num_mip_levels;
-	cl_uint num_samples;
-	void *buffer;
+  cl_uint image_type;
+  size_t image_width;
+  size_t image_height;
+  size_t image_depth;
+  size_t image_array_size;
+  size_t image_row_pitch;
+  size_t image_slice_pitch;
+  cl_uint num_mip_levels;
+  cl_uint num_samples;
+  void *buffer;
 } cl_image_desc;
 
 // openCL function pointers
-cl_int(*clGetPlatformIDs) (cl_uint num_entries, void **platforms, cl_uint * num_platforms);
-cl_int(*clGetDeviceIDs) (void *platform, cl_device_type device_type, cl_uint num_entries, void **devices,
-			 cl_uint * num_devices);
-void *(*clCreateContext)(cl_context_properties * properties, cl_uint num_devices, void **devices, void *callback,
-			 void *user_data, cl_int * errcode_ret);
-void *(*clCreateProgramWithSource)(void *context, cl_uint count, const char **strings, size_t *lengths,
-				   cl_int * errcode_ret);
-cl_mem(*clCreateImage) (void *context, cl_mem_flags flags, cl_image_format * image_format, cl_image_desc * image_desc,
-			void *host_ptr, cl_int * errcode_ret);
-void *(*clCreateCommandQueueWithProperties)(void *context, void *device, void *properties, cl_int * errcode_ret);
-cl_int(*clBuildProgram) (void *program, cl_uint num_devices, void **device_list, char *options, void *,
-			 void *user_data);
-cl_int(*clGetProgramBuildInfo) (void *program, void *device, cl_uint param_name, size_t param_value_size,
-				void *param_value, size_t *param_value_size_ret);
-cl_int(*clReleaseMemObject) (cl_mem memobj);
-cl_int(*clReleaseKernel) (void *kernel);
-void *(*clCreateKernel)(void *program, const char *kernel_name, cl_int * errcode_ret);
-cl_int(*clSetKernelArg) (void *kernel, cl_uint arg_index, size_t arg_size, const void *arg_value);
-cl_int(*clEnqueueNDRangeKernel) (void *command_queue, void *kernel, cl_uint work_dim, const size_t *global_work_offset,
-				 const size_t *global_work_size, const size_t *local_work_size,
-				 cl_uint num_events_in_wait_list, const void **event_wait_list, void **event);
-cl_int(*clEnqueueReadImage) (void *command_queue, cl_mem image, cl_bool blocking_read, const size_t *origin,
-			     const size_t *region, size_t row_pitch, size_t slice_pitch, void *ptr,
-			     cl_uint num_events_in_wait_list, void **event_wait_list, void **event);
-cl_int(*clWaitForEvents) (cl_uint num_events, void **event_list);
-cl_int(*clReleaseEvent) (void *event);
-cl_mem(*clCreateBuffer) (void *context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int * errcode_ret);
-cl_int(*clEnqueueReadBuffer) (void *command_queue,
-			      cl_mem buffer,
-			      cl_bool blocking_read,
-			      size_t offset,
-			      size_t size,
-			      void *ptr, cl_uint num_events_in_wait_list, void *event_wait_list, void *event);
-cl_int(*clEnqueueWriteBuffer) (void *command_queue,
-			       cl_mem buffer,
-			       cl_bool blocking_write,
-			       size_t offset,
-			       size_t size,
-			       const void *ptr, cl_uint num_events_in_wait_list, void *event_wait_list, void *event);
-cl_int(*clGetDeviceInfo) (void *device,
-			  cl_uint param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret);
+cl_int (*clGetPlatformIDs)(cl_uint num_entries, void **platforms,
+                           cl_uint *num_platforms);
+cl_int (*clGetDeviceIDs)(void *platform, cl_device_type device_type,
+                         cl_uint num_entries, void **devices,
+                         cl_uint *num_devices);
+void *(*clCreateContext)(cl_context_properties *properties, cl_uint num_devices,
+                         void **devices, void *callback, void *user_data,
+                         cl_int *errcode_ret);
+void *(*clCreateProgramWithSource)(void *context, cl_uint count,
+                                   const char **strings, size_t *lengths,
+                                   cl_int *errcode_ret);
+cl_mem (*clCreateImage)(void *context, cl_mem_flags flags,
+                        cl_image_format *image_format,
+                        cl_image_desc *image_desc, void *host_ptr,
+                        cl_int *errcode_ret);
+void *(*clCreateCommandQueueWithProperties)(void *context, void *device,
+                                            void *properties,
+                                            cl_int *errcode_ret);
+cl_int (*clBuildProgram)(void *program, cl_uint num_devices, void **device_list,
+                         char *options, void *, void *user_data);
+cl_int (*clGetProgramBuildInfo)(void *program, void *device, cl_uint param_name,
+                                size_t param_value_size, void *param_value,
+                                size_t *param_value_size_ret);
+cl_int (*clReleaseMemObject)(cl_mem memobj);
+cl_int (*clReleaseKernel)(void *kernel);
+void *(*clCreateKernel)(void *program, const char *kernel_name,
+                        cl_int *errcode_ret);
+cl_int (*clSetKernelArg)(void *kernel, cl_uint arg_index, size_t arg_size,
+                         const void *arg_value);
+cl_int (*clEnqueueNDRangeKernel)(void *command_queue, void *kernel,
+                                 cl_uint work_dim,
+                                 const size_t *global_work_offset,
+                                 const size_t *global_work_size,
+                                 const size_t *local_work_size,
+                                 cl_uint num_events_in_wait_list,
+                                 const void **event_wait_list, void **event);
+cl_int (*clEnqueueReadImage)(void *command_queue, cl_mem image,
+                             cl_bool blocking_read, const size_t *origin,
+                             const size_t *region, size_t row_pitch,
+                             size_t slice_pitch, void *ptr,
+                             cl_uint num_events_in_wait_list,
+                             void **event_wait_list, void **event);
+cl_int (*clWaitForEvents)(cl_uint num_events, void **event_list);
+cl_int (*clReleaseEvent)(void *event);
+cl_mem (*clCreateBuffer)(void *context, cl_mem_flags flags, size_t size,
+                         void *host_ptr, cl_int *errcode_ret);
+cl_int (*clEnqueueReadBuffer)(void *command_queue, cl_mem buffer,
+                              cl_bool blocking_read, size_t offset, size_t size,
+                              void *ptr, cl_uint num_events_in_wait_list,
+                              void *event_wait_list, void *event);
+cl_int (*clEnqueueWriteBuffer)(void *command_queue, cl_mem buffer,
+                               cl_bool blocking_write, size_t offset,
+                               size_t size, const void *ptr,
+                               cl_uint num_events_in_wait_list,
+                               void *event_wait_list, void *event);
+cl_int (*clGetDeviceInfo)(void *device, cl_uint param_name,
+                          size_t param_value_size, void *param_value,
+                          size_t *param_value_size_ret);
 
 // global variables for the device and program
 void *deviceID;
@@ -357,578 +374,681 @@ void *queue;
 void *program;
 
 // load libOpenCL.so, load functions, initialize device and program
-int init()
-{
-	if (libOpenCL) {
-		return 0;
-	}
+int init(int verbose) {
+  if (verbose)
+    printf("imgproc: starting OpenCL initialization\n");
+  if (libOpenCL) {
+    if (verbose)
+      printf("imgproc: OpenCL already initialized\n");
+    return 0;
+  }
 
-	libOpenCL = dlopen("libOpenCL.so", RTLD_LAZY);
+  if (verbose)
+    printf("imgproc: start dlopen libOpenCL.so\n");
+  libOpenCL = dlopen("libOpenCL.so", RTLD_LAZY);
+  if (verbose)
+    printf("imgproc: end dlopen libOpenCL.so\n");
 
-	if (!libOpenCL) {
-		return -1;
-	}
+  if (!libOpenCL) {
+    if (verbose)
+      printf("imgproc: libOpenCL.so not opened\n");
+    return -1;
+  }
+  if (verbose)
+    printf("imgproc: libOpenCL.so opened\n");
 
-	clGetPlatformIDs = (cl_int(*)())dlsym(libOpenCL, "clGetPlatformIDs");
-	if (clGetPlatformIDs == NULL) {
-		return -1;
-	}
-	clGetDeviceIDs = (cl_int(*)())dlsym(libOpenCL, "clGetDeviceIDs");
-	if (clGetDeviceIDs == NULL) {
-		return -1;
-	}
-	clGetDeviceInfo = (cl_int(*)(void *, cl_uint, size_t, void *, size_t *))dlsym(libOpenCL, "clGetDeviceInfo");
-	if (clGetDeviceInfo == NULL) {
-		return -1;
-	}
-	clCreateContext = (void *(*)())dlsym(libOpenCL, "clCreateContext");
-	if (clCreateContext == NULL) {
-		return -1;
-	}
-	clCreateProgramWithSource = (void *(*)())dlsym(libOpenCL, "clCreateProgramWithSource");
-	clCreateImage = (void *(*)())dlsym(libOpenCL, "clCreateImage");
-	if (clCreateImage == NULL) {
-		return -1;
-	}
-	clCreateCommandQueueWithProperties = (void *(*)())dlsym(libOpenCL, "clCreateCommandQueueWithProperties");
-	if (clCreateCommandQueueWithProperties == NULL) {
-		return -1;
-	}
-	clBuildProgram =
-	    (cl_int(*)(void *, cl_uint, void **, char *, void *, void *))dlsym(libOpenCL, "clBuildProgram");
-	if (clBuildProgram == NULL) {
-		return -1;
-	}
-	clGetProgramBuildInfo =
-	    (cl_int(*)(void *, void *, cl_uint, size_t, void *, size_t *))dlsym(libOpenCL, "clGetProgramBuildInfo");
-	if (clGetProgramBuildInfo == NULL) {
-		return -1;
-	}
-	clReleaseMemObject = (cl_int(*)(void *))dlsym(libOpenCL, "clReleaseMemObject");
-	if (clReleaseMemObject == NULL) {
-		return -1;
-	}
-	clReleaseKernel = (cl_int(*)(void *))dlsym(libOpenCL, "clReleaseKernel");
-	if (clReleaseKernel == NULL) {
-		return -1;
-	}
-	clCreateKernel = (void *(*)(void *, const char *, cl_int *))dlsym(libOpenCL, "clCreateKernel");
-	if (clCreateKernel == NULL) {
-		return -1;
-	}
-	clSetKernelArg = (cl_int(*)(void *, cl_uint, size_t, const void *))dlsym(libOpenCL, "clSetKernelArg");
-	if (clSetKernelArg == NULL) {
-		return -1;
-	}
-	clEnqueueNDRangeKernel = (cl_int(*)
-				  (void *, void *, cl_uint, const size_t *, const size_t *,
-				   const size_t *, cl_uint, const void **, void **))dlsym(libOpenCL,
-											  "clEnqueueNDRangeKernel");
-	if (clEnqueueNDRangeKernel == NULL) {
-		return -1;
-	}
-	clEnqueueReadImage = (cl_int(*)
-			      (void *, cl_mem, cl_bool, const size_t *, const size_t *, size_t,
-			       size_t, void *, cl_uint, void **, void **))dlsym(libOpenCL, "clEnqueueReadImage");
-	if (clEnqueueReadImage == NULL) {
-		return -1;
-	}
-	clWaitForEvents = (cl_int(*)(cl_uint, void **))dlsym(libOpenCL, "clWaitForEvents");
-	if (clWaitForEvents == NULL) {
-		return -1;
-	}
-	clReleaseEvent = (cl_int(*)(void *))dlsym(libOpenCL, "clReleaseEvent");
-	if (clReleaseEvent == NULL) {
-		return -1;
-	}
-	clCreateBuffer = (cl_mem(*)(void *, cl_mem_flags, size_t, void *, cl_int *))dlsym(libOpenCL, "clCreateBuffer");
-	if (clReleaseEvent == NULL) {
-		return -1;
-	}
-	clEnqueueReadBuffer =
-	    (cl_int(*)(void *, void *, cl_bool, size_t, size_t, void *, cl_uint, void *, void *))dlsym(libOpenCL,
-												       "clEnqueueReadBuffer");
-	if (clEnqueueReadBuffer == NULL) {
-		return -1;
-	}
-	clEnqueueWriteBuffer =
-	    (cl_int(*)(void *, void *, cl_bool, size_t, size_t, const void *, cl_uint, void *, void *))dlsym(libOpenCL,
-													     "clEnqueueWriteBuffer");
-	if (clEnqueueWriteBuffer == NULL) {
-		return -1;
-	}
+  if (verbose)
+    printf("imgproc: loading clGetPlatformIDs\n");
+  clGetPlatformIDs = (cl_int(*)())dlsym(libOpenCL, "clGetPlatformIDs");
+  if (clGetPlatformIDs == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clGetDeviceIDs\n");
+  clGetDeviceIDs = (cl_int(*)())dlsym(libOpenCL, "clGetDeviceIDs");
+  if (clGetDeviceIDs == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clGetDeviceInfo\n");
+  clGetDeviceInfo = (cl_int(*)(void *, cl_uint, size_t, void *, size_t *))dlsym(
+      libOpenCL, "clGetDeviceInfo");
+  if (clGetDeviceInfo == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clCreateContext\n");
+  clCreateContext = (void *(*)())dlsym(libOpenCL, "clCreateContext");
+  if (clCreateContext == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clCreateProgramWithSource\n");
+  clCreateProgramWithSource =
+      (void *(*)())dlsym(libOpenCL, "clCreateProgramWithSource");
+  if (clCreateProgramWithSource == NULL)
+    return -1;
+  clCreateImage = (void *(*)())dlsym(libOpenCL, "clCreateImage");
+  if (clCreateImage == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clCreateCommandQueueWithProperties\n");
+  clCreateCommandQueueWithProperties =
+      (void *(*)())dlsym(libOpenCL, "clCreateCommandQueueWithProperties");
+  if (clCreateCommandQueueWithProperties == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clBuildProgram\n");
+  clBuildProgram = (cl_int(*)(void *, cl_uint, void **, char *, void *,
+                              void *))dlsym(libOpenCL, "clBuildProgram");
+  if (clBuildProgram == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clGetProgramBuildInfo\n");
+  clGetProgramBuildInfo =
+      (cl_int(*)(void *, void *, cl_uint, size_t, void *, size_t *))dlsym(
+          libOpenCL, "clGetProgramBuildInfo");
+  if (clGetProgramBuildInfo == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clReleaseMemObject\n");
+  clReleaseMemObject =
+      (cl_int(*)(void *))dlsym(libOpenCL, "clReleaseMemObject");
+  if (clReleaseMemObject == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clReleaseKernel\n");
+  clReleaseKernel = (cl_int(*)(void *))dlsym(libOpenCL, "clReleaseKernel");
+  if (clReleaseKernel == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clCreateKernel\n");
+  clCreateKernel = (void *(*)(void *, const char *, cl_int *))dlsym(
+      libOpenCL, "clCreateKernel");
+  if (clCreateKernel == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clSetKernelArg\n");
+  clSetKernelArg = (cl_int(*)(void *, cl_uint, size_t, const void *))dlsym(
+      libOpenCL, "clSetKernelArg");
+  if (clSetKernelArg == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clEnqueueNDRangeKernel\n");
+  clEnqueueNDRangeKernel =
+      (cl_int(*)(void *, void *, cl_uint, const size_t *, const size_t *,
+                 const size_t *, cl_uint, const void **,
+                 void **))dlsym(libOpenCL, "clEnqueueNDRangeKernel");
+  if (clEnqueueNDRangeKernel == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clEnqueueReadImage\n");
+  clEnqueueReadImage = (cl_int(*)(
+      void *, cl_mem, cl_bool, const size_t *, const size_t *, size_t, size_t,
+      void *, cl_uint, void **, void **))dlsym(libOpenCL, "clEnqueueReadImage");
+  if (clEnqueueReadImage == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clWaitForEvents\n");
+  clWaitForEvents =
+      (cl_int(*)(cl_uint, void **))dlsym(libOpenCL, "clWaitForEvents");
+  if (clWaitForEvents == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clReleaseEvent\n");
+  clReleaseEvent = (cl_int(*)(void *))dlsym(libOpenCL, "clReleaseEvent");
+  if (clReleaseEvent == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clCreateBuffer\n");
+  clCreateBuffer = (cl_mem(*)(void *, cl_mem_flags, size_t, void *,
+                              cl_int *))dlsym(libOpenCL, "clCreateBuffer");
+  if (clCreateBuffer == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clEnqueueReadBuffer\n");
+  clEnqueueReadBuffer =
+      (cl_int(*)(void *, void *, cl_bool, size_t, size_t, void *, cl_uint,
+                 void *, void *))dlsym(libOpenCL, "clEnqueueReadBuffer");
+  if (clEnqueueReadBuffer == NULL)
+    return -1;
+  if (verbose)
+    printf("imgproc: loading clEnqueueWriteBuffer\n");
+  clEnqueueWriteBuffer =
+      (cl_int(*)(void *, void *, cl_bool, size_t, size_t, const void *, cl_uint,
+                 void *, void *))dlsym(libOpenCL, "clEnqueueWriteBuffer");
+  if (clEnqueueWriteBuffer == NULL)
+    return -1;
 
-	int ret;
-	unsigned int len;
-	ret = (*clGetPlatformIDs) (0, NULL, &len);
-	if (ret != 0)
-		return ret;
+  int ret;
+  unsigned int len;
+  if (verbose)
+    printf("imgproc: call clGetPlatformIDs 0\n");
+  ret = (*clGetPlatformIDs)(0, NULL, &len);
+  if (ret != 0)
+    return ret;
 
-	void **platformIDs = malloc(len * sizeof(void *));
-	ret = (*clGetPlatformIDs) (len, platformIDs, NULL);
-	if (ret != 0)
-		return ret;
-	for (int i = 0; i < len; i++) {
-		ret = (*clGetDeviceIDs) (platformIDs[i], CL_DEVICE_TYPE_GPU, 1, &deviceID, NULL);
-		if (ret == 0) {
-			cl_uint image_support;
-			(*clGetDeviceInfo) (deviceID, CL_DEVICE_IMAGE_SUPPORT, sizeof(image_support), &image_support,
-					    NULL);
-			if (image_support == 1)
-				break;
-		}
-		deviceID = NULL;
-	}
-	free(platformIDs);
+  if (verbose)
+    printf("imgproc: call clGetPlatformIDs %d\n", len);
+  void **platformIDs = malloc(len * sizeof(void *));
+  ret = (*clGetPlatformIDs)(len, platformIDs, NULL);
+  if (ret != 0)
+    return ret;
+  for (int i = 0; i < len; i++) {
+    if (verbose)
+      printf("imgproc: call clGetDeviceIDs\n");
+    ret = (*clGetDeviceIDs)(platformIDs[i], CL_DEVICE_TYPE_GPU, 1, &deviceID,
+                            NULL);
+    if (ret == 0) {
+      cl_uint image_support;
+      if (verbose)
+        printf("imgproc: call clGetDeviceInfo\n");
+      (*clGetDeviceInfo)(deviceID, CL_DEVICE_IMAGE_SUPPORT,
+                         sizeof(image_support), &image_support, NULL);
+      if (image_support == 1)
+        break;
+    }
+    deviceID = NULL;
+  }
+  free(platformIDs);
 
-	if (deviceID == NULL) {
-		return -100;
-	}
+  if (deviceID == NULL)
+    return -100;
 
-	deviceCtx = (*clCreateContext) (NULL, 1, &deviceID, NULL, NULL, &ret);
-	if (ret != 0)
-		return ret;
-	queue = (*clCreateCommandQueueWithProperties) (deviceCtx, deviceID, NULL, &ret);
-	if (ret != 0)
-		return ret;
-	program = (*clCreateProgramWithSource) (deviceCtx, 1, &source, NULL, &ret);
-	if (ret != 0)
-		return ret;
-	ret = (*clBuildProgram) (program, 1, &deviceID, NULL, NULL, NULL);
-	if (ret != 0) {
-		if (ret == -11) {
-			size_t len;
-			cl_int r = (*clGetProgramBuildInfo) (program, deviceID, CL_PROGRAM_BUILD_LOG, 0, NULL, &len);
-			if (r != 0)
-				return ret;
-			char log[2048];
-			(*clGetProgramBuildInfo) (program, deviceID, CL_PROGRAM_BUILD_LOG, sizeof(log), log, NULL);
-			printf("\n%s\n", log);
-		}
-		return ret;
-	}
-	time_t t;
-	srand((unsigned)time(&t));
+  if (verbose)
+    printf("imgproc: call clCreateContext\n");
+  deviceCtx = (*clCreateContext)(NULL, 1, &deviceID, NULL, NULL, &ret);
+  if (ret != 0)
+    return ret;
+  if (verbose)
+    printf("imgproc: call clCreateCommandQueueWithProperties\n");
+  queue =
+      (*clCreateCommandQueueWithProperties)(deviceCtx, deviceID, NULL, &ret);
+  if (ret != 0)
+    return ret;
+  if (verbose)
+    printf("imgproc: call clCreateProgramWithSource\n");
+  program = (*clCreateProgramWithSource)(deviceCtx, 1, &source, NULL, &ret);
+  if (ret != 0)
+    return ret;
+  if (verbose)
+    printf("imgproc: call clBuildProgram\n");
+  ret = (*clBuildProgram)(program, 1, &deviceID, NULL, NULL, NULL);
+  if (ret != 0) {
+    if (ret == -11) {
+      size_t len;
+      if (verbose)
+        printf("imgproc: call clBuildProgram\n");
+      cl_int r = (*clGetProgramBuildInfo)(program, deviceID,
+                                          CL_PROGRAM_BUILD_LOG, 0, NULL, &len);
+      if (r != 0)
+        return ret;
+      if (verbose)
+        printf("imgproc: call clGetProgramBuildInfo\n");
+      char log[2048];
+      (*clGetProgramBuildInfo)(program, deviceID, CL_PROGRAM_BUILD_LOG,
+                               sizeof(log), log, NULL);
+      printf("\n%s\n", log);
+    }
+    return ret;
+  }
+  time_t t;
+  srand((unsigned)time(&t));
+  if (verbose)
+    printf("imgproc: init successful\n");
 
-	return 0;
+  return 0;
 }
 
-size_t max(int a, int b)
-{
-	return (a > b) ? a : b;
-}
+size_t max(int a, int b) { return (a > b) ? a : b; }
 
 typedef struct {
-	void *img;
-	unsigned int width;
-	unsigned int height;
-	unsigned int rowPitch;
-	unsigned int pixelSize;
-	void *resizeKernel;
-	void *assignToCentersKernel;
-	void *recomputeCentersKernel;
-	void *randomCentersFromImageKernel;
-	void *convertToUint8Kernel;
-	void *addOneKernel;
+  void *img;
+  unsigned int width;
+  unsigned int height;
+  unsigned int rowPitch;
+  unsigned int pixelSize;
+  void *resizeKernel;
+  void *assignToCentersKernel;
+  void *recomputeCentersKernel;
+  void *randomCentersFromImageKernel;
+  void *convertToUint8Kernel;
+  void *addOneKernel;
 } imageResizer;
 
-int releaseImageResizer(void *irp)
-{
-	imageResizer *ir = (imageResizer *) irp;
+int releaseImageResizer(void *irp) {
+  imageResizer *ir = (imageResizer *)irp;
 
-	if (ir->img != NULL) {
-		cl_int ret = (*clReleaseMemObject) (ir->img);
-		if (ret != 0)
-			return ret;
-	}
-	if (ir->resizeKernel != NULL) {
-		cl_int ret = (*clReleaseKernel) (ir->resizeKernel);
-		if (ret != 0)
-			return ret;
-	}
-	if (ir->assignToCentersKernel != NULL) {
-		cl_int ret = (*clReleaseKernel) (ir->assignToCentersKernel);
-		if (ret != 0)
-			return ret;
-	}
-	if (ir->recomputeCentersKernel != NULL) {
-		cl_int ret = (*clReleaseKernel) (ir->recomputeCentersKernel);
-		if (ret != 0)
-			return ret;
-	}
-	if (ir->randomCentersFromImageKernel != NULL) {
-		cl_int ret = (*clReleaseKernel) (ir->randomCentersFromImageKernel);
-		if (ret != 0)
-			return ret;
-	}
-	if (ir->convertToUint8Kernel != NULL) {
-		cl_int ret = (*clReleaseKernel) (ir->convertToUint8Kernel);
-		if (ret != 0)
-			return ret;
-	}
-	if (ir->addOneKernel != NULL) {
-		cl_int ret = (*clReleaseKernel) (ir->addOneKernel);
-		if (ret != 0)
-			return ret;
-	}
-	free(ir);
-	return 0;
+  if (ir->img != NULL) {
+    cl_int ret = (*clReleaseMemObject)(ir->img);
+    if (ret != 0)
+      return ret;
+  }
+  if (ir->resizeKernel != NULL) {
+    cl_int ret = (*clReleaseKernel)(ir->resizeKernel);
+    if (ret != 0)
+      return ret;
+  }
+  if (ir->assignToCentersKernel != NULL) {
+    cl_int ret = (*clReleaseKernel)(ir->assignToCentersKernel);
+    if (ret != 0)
+      return ret;
+  }
+  if (ir->recomputeCentersKernel != NULL) {
+    cl_int ret = (*clReleaseKernel)(ir->recomputeCentersKernel);
+    if (ret != 0)
+      return ret;
+  }
+  if (ir->randomCentersFromImageKernel != NULL) {
+    cl_int ret = (*clReleaseKernel)(ir->randomCentersFromImageKernel);
+    if (ret != 0)
+      return ret;
+  }
+  if (ir->convertToUint8Kernel != NULL) {
+    cl_int ret = (*clReleaseKernel)(ir->convertToUint8Kernel);
+    if (ret != 0)
+      return ret;
+  }
+  if (ir->addOneKernel != NULL) {
+    cl_int ret = (*clReleaseKernel)(ir->addOneKernel);
+    if (ret != 0)
+      return ret;
+  }
+  free(ir);
+  return 0;
 }
 
 void *createImageResizer(unsigned int width, unsigned int height,
-			 unsigned int rowPitch, unsigned int pixelSize, void *data, cl_int * ret)
-{
-	cl_image_format format;
-	format.image_channel_order = pixelSize == 1 ? CL_INTENSITY : CL_RGBA;
-	format.image_channel_data_type = CL_UNORM_INT8;
-	cl_mem_flags inFlags = CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR;
-	cl_image_desc inDesc;
-	inDesc.image_type = CL_MEM_OBJECT_IMAGE2D;
-	inDesc.image_width = width;
-	inDesc.image_height = height;
-	inDesc.image_depth = 0;
-	inDesc.image_array_size = 0;
-	inDesc.image_row_pitch = (size_t)(rowPitch);
-	inDesc.image_slice_pitch = 0;
-	inDesc.num_mip_levels = 0;
-	inDesc.num_samples = 0;
-	inDesc.buffer = NULL;
-	imageResizer *ir = calloc(1, sizeof(imageResizer));
-	ir->img = (*clCreateImage) (deviceCtx, inFlags, &format, &inDesc, data, ret);
-	if (*ret != 0) {
-		releaseImageResizer((void *)ir);
-		return ret;
-	}
-	ir->width = width;
-	ir->height = height;
-	ir->rowPitch = rowPitch;
+                         unsigned int rowPitch, unsigned int pixelSize,
+                         void *data, cl_int *ret) {
+  cl_image_format format;
+  format.image_channel_order = pixelSize == 1 ? CL_INTENSITY : CL_RGBA;
+  format.image_channel_data_type = CL_UNORM_INT8;
+  cl_mem_flags inFlags = CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR;
+  cl_image_desc inDesc;
+  inDesc.image_type = CL_MEM_OBJECT_IMAGE2D;
+  inDesc.image_width = width;
+  inDesc.image_height = height;
+  inDesc.image_depth = 0;
+  inDesc.image_array_size = 0;
+  inDesc.image_row_pitch = (size_t)(rowPitch);
+  inDesc.image_slice_pitch = 0;
+  inDesc.num_mip_levels = 0;
+  inDesc.num_samples = 0;
+  inDesc.buffer = NULL;
+  imageResizer *ir = calloc(1, sizeof(imageResizer));
+  ir->img = (*clCreateImage)(deviceCtx, inFlags, &format, &inDesc, data, ret);
+  if (*ret != 0) {
+    releaseImageResizer((void *)ir);
+    return ret;
+  }
+  ir->width = width;
+  ir->height = height;
+  ir->rowPitch = rowPitch;
 
-	ir->resizeKernel = (*clCreateKernel) (program, "resize_bicubic", ret);
-	if (*ret != 0) {
-		releaseImageResizer((void *)ir);
-		return ret;
-	}
-	ir->assignToCentersKernel = (*clCreateKernel) (program, "assign_to_centers", ret);
-	if (*ret != 0) {
-		releaseImageResizer((void *)ir);
-		return ret;
-	}
-	ir->recomputeCentersKernel = (*clCreateKernel) (program, "recompute_centers", ret);
-	if (*ret != 0) {
-		releaseImageResizer((void *)ir);
-		return ret;
-	}
-	ir->randomCentersFromImageKernel = (*clCreateKernel) (program, "random_centers_from_image", ret);
-	if (*ret != 0) {
-		releaseImageResizer((void *)ir);
-		return ret;
-	}
-	ir->convertToUint8Kernel = (*clCreateKernel) (program, "convert_to_uint8", ret);
-	if (*ret != 0) {
-		releaseImageResizer((void *)ir);
-		return ret;
-	}
-	ir->addOneKernel = (*clCreateKernel) (program, "add_one", ret);
-	if (*ret != 0) {
-		releaseImageResizer((void *)ir);
-		return ret;
-	}
+  ir->resizeKernel = (*clCreateKernel)(program, "resize_bicubic", ret);
+  if (*ret != 0) {
+    releaseImageResizer((void *)ir);
+    return ret;
+  }
+  ir->assignToCentersKernel =
+      (*clCreateKernel)(program, "assign_to_centers", ret);
+  if (*ret != 0) {
+    releaseImageResizer((void *)ir);
+    return ret;
+  }
+  ir->recomputeCentersKernel =
+      (*clCreateKernel)(program, "recompute_centers", ret);
+  if (*ret != 0) {
+    releaseImageResizer((void *)ir);
+    return ret;
+  }
+  ir->randomCentersFromImageKernel =
+      (*clCreateKernel)(program, "random_centers_from_image", ret);
+  if (*ret != 0) {
+    releaseImageResizer((void *)ir);
+    return ret;
+  }
+  ir->convertToUint8Kernel =
+      (*clCreateKernel)(program, "convert_to_uint8", ret);
+  if (*ret != 0) {
+    releaseImageResizer((void *)ir);
+    return ret;
+  }
+  ir->addOneKernel = (*clCreateKernel)(program, "add_one", ret);
+  if (*ret != 0) {
+    releaseImageResizer((void *)ir);
+    return ret;
+  }
 
-	return (void *)(ir);
+  return (void *)(ir);
 }
 
-int _resize(imageResizer * ir, unsigned int outWidth, unsigned int outHeight, cl_mem * out, void **event)
-{
-	cl_int ret;
-	cl_image_format format;
-	format.image_channel_order = ir->pixelSize == 1 ? CL_INTENSITY : CL_RGBA;
-	format.image_channel_data_type = CL_UNORM_INT8;
-	// output image
-	cl_mem_flags outFlags = CL_MEM_WRITE_ONLY;
-	cl_image_desc outDesc;
-	outDesc.image_type = CL_MEM_OBJECT_IMAGE2D;
-	outDesc.image_width = outWidth;
-	outDesc.image_height = outHeight;
-	outDesc.image_row_pitch = 0;	// rowPitch;
-	outDesc.image_slice_pitch = 0;
-	outDesc.num_mip_levels = 0;
-	outDesc.num_samples = 0;
-	outDesc.buffer = NULL;
-	*out = (*clCreateImage) (deviceCtx, outFlags, &format, &outDesc, NULL, &ret);
-	if (ret != 0)
-		return ret;
-	// set args to resize kernel
-	ret = (*clSetKernelArg) (ir->resizeKernel, 0, sizeof(void *), &ir->img);
-	ret |= (*clSetKernelArg) (ir->resizeKernel, 1, sizeof(void *), out);
-	ret |= (*clSetKernelArg) (ir->resizeKernel, 2, sizeof(unsigned int), &ir->width);
-	ret |= (*clSetKernelArg) (ir->resizeKernel, 3, sizeof(unsigned int), &ir->height);
-	ret |= (*clSetKernelArg) (ir->resizeKernel, 4, sizeof(unsigned int), &outWidth);
-	ret |= (*clSetKernelArg) (ir->resizeKernel, 5, sizeof(unsigned int), &outHeight);
-	float ratioX = (float)(outWidth) / (float)(ir->width);
-	ret |= (*clSetKernelArg) (ir->resizeKernel, 6, sizeof(float), &ratioX);
-	float ratioY = (float)(outHeight) / (float)(ir->height);
-	ret |= (*clSetKernelArg) (ir->resizeKernel, 7, sizeof(float), &ratioY);
-	if (ret != 0)
-		return ret;
-	// run kernel
-	size_t globalSize[] = { max(ir->width, outWidth), max(ir->height, outHeight) };
-	ret = (*clEnqueueNDRangeKernel) (queue, ir->resizeKernel, 2, 0, globalSize, 0, 0, NULL, event);
-	if (ret != 0)
-		return ret;
+int _resize(imageResizer *ir, unsigned int outWidth, unsigned int outHeight,
+            cl_mem *out, void **event) {
+  cl_int ret;
+  cl_image_format format;
+  format.image_channel_order = ir->pixelSize == 1 ? CL_INTENSITY : CL_RGBA;
+  format.image_channel_data_type = CL_UNORM_INT8;
+  // output image
+  cl_mem_flags outFlags = CL_MEM_WRITE_ONLY;
+  cl_image_desc outDesc;
+  outDesc.image_type = CL_MEM_OBJECT_IMAGE2D;
+  outDesc.image_width = outWidth;
+  outDesc.image_height = outHeight;
+  outDesc.image_row_pitch = 0; // rowPitch;
+  outDesc.image_slice_pitch = 0;
+  outDesc.num_mip_levels = 0;
+  outDesc.num_samples = 0;
+  outDesc.buffer = NULL;
+  *out = (*clCreateImage)(deviceCtx, outFlags, &format, &outDesc, NULL, &ret);
+  if (ret != 0)
+    return ret;
+  // set args to resize kernel
+  ret = (*clSetKernelArg)(ir->resizeKernel, 0, sizeof(void *), &ir->img);
+  ret |= (*clSetKernelArg)(ir->resizeKernel, 1, sizeof(void *), out);
+  ret |=
+      (*clSetKernelArg)(ir->resizeKernel, 2, sizeof(unsigned int), &ir->width);
+  ret |=
+      (*clSetKernelArg)(ir->resizeKernel, 3, sizeof(unsigned int), &ir->height);
+  ret |=
+      (*clSetKernelArg)(ir->resizeKernel, 4, sizeof(unsigned int), &outWidth);
+  ret |=
+      (*clSetKernelArg)(ir->resizeKernel, 5, sizeof(unsigned int), &outHeight);
+  float ratioX = (float)(outWidth) / (float)(ir->width);
+  ret |= (*clSetKernelArg)(ir->resizeKernel, 6, sizeof(float), &ratioX);
+  float ratioY = (float)(outHeight) / (float)(ir->height);
+  ret |= (*clSetKernelArg)(ir->resizeKernel, 7, sizeof(float), &ratioY);
+  if (ret != 0)
+    return ret;
+  // run kernel
+  size_t globalSize[] = {max(ir->width, outWidth), max(ir->height, outHeight)};
+  ret = (*clEnqueueNDRangeKernel)(queue, ir->resizeKernel, 2, 0, globalSize, 0,
+                                  0, NULL, event);
+  return ret;
 }
 
-int resize(void *irp, unsigned int outWidth, unsigned int outHeight, void *outData)
-{
-	imageResizer *ir = (imageResizer *) irp;
-	cl_mem out;
-	void *kernelEvent;
-	cl_int ret = _resize(ir, outWidth, outHeight, &out, &kernelEvent);
-	if (ret != 0)
-		return ret;
-	// get image
-	void *readEvent;
-	size_t origin[] = { 0, 0, 0 };
-	size_t region[] = { outWidth, outHeight, 1 };
-	ret = (*clEnqueueReadImage) (queue, out, 1, origin, region, 0, 0, outData, 1, &kernelEvent, &readEvent);
-	ret |= (*clWaitForEvents) (1, &readEvent);
-	ret |= (*clReleaseEvent) (kernelEvent);
-	ret |= (*clReleaseEvent) (readEvent);
-	ret |= (*clReleaseMemObject) (out);
-	if (ret != 0)
-		return ret;
+int resize(void *irp, unsigned int outWidth, unsigned int outHeight,
+           void *outData) {
+  imageResizer *ir = (imageResizer *)irp;
+  cl_mem out;
+  void *kernelEvent;
+  cl_int ret = _resize(ir, outWidth, outHeight, &out, &kernelEvent);
+  if (ret != 0)
+    return ret;
+  // get image
+  void *readEvent;
+  size_t origin[] = {0, 0, 0};
+  size_t region[] = {outWidth, outHeight, 1};
+  ret = (*clEnqueueReadImage)(queue, out, 1, origin, region, 0, 0, outData, 1,
+                              &kernelEvent, &readEvent);
+  ret |= (*clWaitForEvents)(1, &readEvent);
+  ret |= (*clReleaseEvent)(kernelEvent);
+  ret |= (*clReleaseEvent)(readEvent);
+  ret |= (*clReleaseMemObject)(out);
+  if (ret != 0)
+    return ret;
 
-	return 0;
+  return 0;
 }
 
-int getImageData(cl_mem buf, size_t w, size_t h, void *ptr)
-{
-	cl_int ret;
-	void *readEvent;
-	size_t origin[] = { 0, 0, 0 };
-	size_t region[] = { w, h, 1 };
-	ret = (*clEnqueueReadImage) (queue, buf, 1, origin, region, 0, 0, ptr, 0, NULL, &readEvent);
-	ret |= (*clWaitForEvents) (1, &readEvent);
-	ret |= (*clReleaseEvent) (readEvent);
-	return ret;
+int getImageData(cl_mem buf, size_t w, size_t h, void *ptr) {
+  cl_int ret;
+  void *readEvent;
+  size_t origin[] = {0, 0, 0};
+  size_t region[] = {w, h, 1};
+  ret = (*clEnqueueReadImage)(queue, buf, 1, origin, region, 0, 0, ptr, 0, NULL,
+                              &readEvent);
+  ret |= (*clWaitForEvents)(1, &readEvent);
+  ret |= (*clReleaseEvent)(readEvent);
+  return ret;
 }
 
-int getBufferData(cl_mem buf, size_t size, void *ptr)
-{
-	void *event;
-	cl_int ret = (*clEnqueueReadBuffer) (queue, buf, 1, 0, size, ptr, 0, NULL, &event);
-	ret |= (*clWaitForEvents) (1, &event);
-	ret |= (*clReleaseEvent) (event);
-	return ret;
+int getBufferData(cl_mem buf, size_t size, void *ptr) {
+  void *event;
+  cl_int ret =
+      (*clEnqueueReadBuffer)(queue, buf, 1, 0, size, ptr, 0, NULL, &event);
+  ret |= (*clWaitForEvents)(1, &event);
+  ret |= (*clReleaseEvent)(event);
+  return ret;
 }
 
-int setBufferData(cl_mem buf, size_t size, void *data)
-{
-	void *event;
-	cl_int ret = (*clEnqueueWriteBuffer) (queue, buf, 1, 0, size, data, 0, NULL, &event);
-	ret |= (*clWaitForEvents) (1, &event);
-	ret |= (*clReleaseEvent) (event);
-	return ret;
+int setBufferData(cl_mem buf, size_t size, void *data) {
+  void *event;
+  cl_int ret =
+      (*clEnqueueWriteBuffer)(queue, buf, 1, 0, size, data, 0, NULL, &event);
+  ret |= (*clWaitForEvents)(1, &event);
+  ret |= (*clReleaseEvent)(event);
+  return ret;
 }
 
-int assign_to_centers_kernel(imageResizer * ir, cl_mem out, unsigned int outWidth, unsigned int outHeight,
-			     cl_mem centers, unsigned int k, cl_mem assignments, cl_mem changed)
-{
-	cl_int ret;
-	ret = (*clSetKernelArg) (ir->assignToCentersKernel, 0, sizeof(cl_mem), &out);
-	ret |= (*clSetKernelArg) (ir->assignToCentersKernel, 1, sizeof(unsigned int), &outWidth);
-	ret |= (*clSetKernelArg) (ir->assignToCentersKernel, 2, sizeof(cl_mem), &centers);
-	ret |= (*clSetKernelArg) (ir->assignToCentersKernel, 3, sizeof(unsigned int), &k);
-	ret |= (*clSetKernelArg) (ir->assignToCentersKernel, 4, sizeof(cl_mem), &assignments);
-	ret |= (*clSetKernelArg) (ir->assignToCentersKernel, 5, sizeof(cl_mem), &changed);
-	if (ret != 0)
-		return ret;
+int assign_to_centers_kernel(imageResizer *ir, cl_mem out,
+                             unsigned int outWidth, unsigned int outHeight,
+                             cl_mem centers, unsigned int k, cl_mem assignments,
+                             cl_mem changed) {
+  cl_int ret;
+  ret = (*clSetKernelArg)(ir->assignToCentersKernel, 0, sizeof(cl_mem), &out);
+  ret |= (*clSetKernelArg)(ir->assignToCentersKernel, 1, sizeof(unsigned int),
+                           &outWidth);
+  ret |=
+      (*clSetKernelArg)(ir->assignToCentersKernel, 2, sizeof(cl_mem), &centers);
+  ret |=
+      (*clSetKernelArg)(ir->assignToCentersKernel, 3, sizeof(unsigned int), &k);
+  ret |= (*clSetKernelArg)(ir->assignToCentersKernel, 4, sizeof(cl_mem),
+                           &assignments);
+  ret |=
+      (*clSetKernelArg)(ir->assignToCentersKernel, 5, sizeof(cl_mem), &changed);
+  if (ret != 0)
+    return ret;
 
-	void *event;
-	size_t globalSize[] = { outWidth, outHeight };
-	ret |= (*clEnqueueNDRangeKernel) (queue, ir->assignToCentersKernel, 2, 0, globalSize, 0, 0, NULL, &event);
-	ret |= (*clWaitForEvents) (1, &event);
-	ret |= (*clReleaseEvent) (event);
-	return ret;
+  void *event;
+  size_t globalSize[] = {outWidth, outHeight};
+  ret |= (*clEnqueueNDRangeKernel)(queue, ir->assignToCentersKernel, 2, 0,
+                                   globalSize, 0, 0, NULL, &event);
+  ret |= (*clWaitForEvents)(1, &event);
+  ret |= (*clReleaseEvent)(event);
+  return ret;
 }
 
-int recompute_centers(imageResizer * ir, cl_mem out, unsigned int outWidth, unsigned int outHeight, cl_mem centers,
-		      unsigned int k, cl_mem assignments, cl_mem global_sum, cl_mem global_count)
-{
-	cl_int ret;
-	ret = (*clSetKernelArg) (ir->recomputeCentersKernel, 0, sizeof(cl_mem), &out);
-	ret |= (*clSetKernelArg) (ir->recomputeCentersKernel, 1, sizeof(cl_uint), &outWidth);
-	ret |= (*clSetKernelArg) (ir->recomputeCentersKernel, 2, sizeof(cl_uint), &outHeight);
-	ret |= (*clSetKernelArg) (ir->recomputeCentersKernel, 3, sizeof(cl_mem), &centers);
-	ret |= (*clSetKernelArg) (ir->recomputeCentersKernel, 4, sizeof(cl_mem), &global_sum);
-	ret |= (*clSetKernelArg) (ir->recomputeCentersKernel, 5, sizeof(cl_mem), &global_count);
-	ret |= (*clSetKernelArg) (ir->recomputeCentersKernel, 6, sizeof(cl_mem), &assignments);
-	ret |= (*clSetKernelArg) (ir->recomputeCentersKernel, 7, k * sizeof(float) * 4, NULL);
-	ret |= (*clSetKernelArg) (ir->recomputeCentersKernel, 8, k * sizeof(cl_uint), NULL);
-	if (ret != 0)
-		return ret;
-	int window = 8;
-	size_t globalSize = (outWidth * outHeight + 1) / window;
-	size_t localSize = k;
-	void *event;
-	ret = (*clEnqueueNDRangeKernel) (queue, ir->recomputeCentersKernel, 1,	// work_dim
-					 0,	// global_work_offset
-					 &globalSize,	// global_work_size
-					 &localSize,	// local_work_size
-					 0,	// num_events_in_wait_list
-					 NULL,	// event_wait_list
-					 &event	//event
-	    );
-	ret |= (*clWaitForEvents) (1, &event);
-	ret |= (*clReleaseEvent) (event);
-	if (ret != 0)
-		return ret;
+int recompute_centers(imageResizer *ir, cl_mem out, unsigned int outWidth,
+                      unsigned int outHeight, cl_mem centers, unsigned int k,
+                      cl_mem assignments, cl_mem global_sum,
+                      cl_mem global_count) {
+  cl_int ret;
+  ret = (*clSetKernelArg)(ir->recomputeCentersKernel, 0, sizeof(cl_mem), &out);
+  ret |= (*clSetKernelArg)(ir->recomputeCentersKernel, 1, sizeof(cl_uint),
+                           &outWidth);
+  ret |= (*clSetKernelArg)(ir->recomputeCentersKernel, 2, sizeof(cl_uint),
+                           &outHeight);
+  ret |= (*clSetKernelArg)(ir->recomputeCentersKernel, 3, sizeof(cl_mem),
+                           &centers);
+  ret |= (*clSetKernelArg)(ir->recomputeCentersKernel, 4, sizeof(cl_mem),
+                           &global_sum);
+  ret |= (*clSetKernelArg)(ir->recomputeCentersKernel, 5, sizeof(cl_mem),
+                           &global_count);
+  ret |= (*clSetKernelArg)(ir->recomputeCentersKernel, 6, sizeof(cl_mem),
+                           &assignments);
+  ret |= (*clSetKernelArg)(ir->recomputeCentersKernel, 7, k * sizeof(float) * 4,
+                           NULL);
+  ret |= (*clSetKernelArg)(ir->recomputeCentersKernel, 8, k * sizeof(cl_uint),
+                           NULL);
+  if (ret != 0)
+    return ret;
+  int window = 8;
+  size_t globalSize = (outWidth * outHeight + 1) / window;
+  size_t localSize = k;
+  void *event;
+  ret = (*clEnqueueNDRangeKernel)(queue, ir->recomputeCentersKernel,
+                                  1,           // work_dim
+                                  0,           // global_work_offset
+                                  &globalSize, // global_work_size
+                                  &localSize,  // local_work_size
+                                  0,           // num_events_in_wait_list
+                                  NULL,        // event_wait_list
+                                  &event       // event
+  );
+  ret |= (*clWaitForEvents)(1, &event);
+  ret |= (*clReleaseEvent)(event);
+  return ret;
 }
 
-int random_centers_from_image(imageResizer * ir, cl_mem out, unsigned int outWidth, unsigned int outHeight,
-			      cl_mem centers, unsigned int k)
-{
-	cl_int ret;
-	ret |= (*clSetKernelArg) (ir->randomCentersFromImageKernel, 0, sizeof(cl_mem), &out);
-	ret |= (*clSetKernelArg) (ir->randomCentersFromImageKernel, 1, sizeof(cl_uint), &outWidth);
-	ret |= (*clSetKernelArg) (ir->randomCentersFromImageKernel, 2, sizeof(cl_uint), &outHeight);
-	ret |= (*clSetKernelArg) (ir->randomCentersFromImageKernel, 3, sizeof(cl_mem), &centers);
-	unsigned int seed = rand();
-	ret |= (*clSetKernelArg) (ir->randomCentersFromImageKernel, 4, sizeof(cl_uint), &seed);
-	if (ret != 0)
-		return ret;
+int random_centers_from_image(imageResizer *ir, cl_mem out,
+                              unsigned int outWidth, unsigned int outHeight,
+                              cl_mem centers, unsigned int k) {
+  cl_int ret;
+  ret |= (*clSetKernelArg)(ir->randomCentersFromImageKernel, 0, sizeof(cl_mem),
+                           &out);
+  ret |= (*clSetKernelArg)(ir->randomCentersFromImageKernel, 1, sizeof(cl_uint),
+                           &outWidth);
+  ret |= (*clSetKernelArg)(ir->randomCentersFromImageKernel, 2, sizeof(cl_uint),
+                           &outHeight);
+  ret |= (*clSetKernelArg)(ir->randomCentersFromImageKernel, 3, sizeof(cl_mem),
+                           &centers);
+  unsigned int seed = rand();
+  ret |= (*clSetKernelArg)(ir->randomCentersFromImageKernel, 4, sizeof(cl_uint),
+                           &seed);
+  if (ret != 0)
+    return ret;
 
-	size_t globalSize = k;
-	void *event;
-	ret = (*clEnqueueNDRangeKernel) (queue, ir->randomCentersFromImageKernel, 1,	// work_dim
-					 0,	// global_work_offset
-					 &globalSize,	// global_work_size
-					 0,	// local_work_size
-					 0,	// num_events_in_wait_list
-					 NULL,	// event_wait_list
-					 &event	//event
-	    );
-	ret |= (*clWaitForEvents) (1, &event);
-	ret |= (*clReleaseEvent) (event);
-	return ret;
+  size_t globalSize = k;
+  void *event;
+  ret = (*clEnqueueNDRangeKernel)(queue, ir->randomCentersFromImageKernel,
+                                  1,           // work_dim
+                                  0,           // global_work_offset
+                                  &globalSize, // global_work_size
+                                  0,           // local_work_size
+                                  0,           // num_events_in_wait_list
+                                  NULL,        // event_wait_list
+                                  &event       // event
+  );
+  ret |= (*clWaitForEvents)(1, &event);
+  ret |= (*clReleaseEvent)(event);
+  return ret;
 }
 
-int convert_to_uint8(imageResizer * ir, cl_mem centers, unsigned int k, void *palette)
-{
-	cl_int ret;
-	cl_mem paletteBuf = (*clCreateBuffer) (deviceCtx, CL_MEM_READ_WRITE, k * 4 * sizeof(cl_uchar), NULL, &ret);
-	if (ret != 0)
-		return ret;
-	ret = (*clSetKernelArg) (ir->convertToUint8Kernel, 0, sizeof(cl_mem), &centers);
-	ret |= (*clSetKernelArg) (ir->convertToUint8Kernel, 1, sizeof(cl_mem), &paletteBuf);
-	if (ret != 0)
-		return ret;
-	size_t globalSize = k;
-	void *convertEvent;
-	ret = (*clEnqueueNDRangeKernel) (queue, ir->convertToUint8Kernel, 1, 0, &globalSize, 0, 0, NULL, &convertEvent);
-	if (ret != 0)
-		return ret;
-	void *readEvent;
-	ret =
-	    (*clEnqueueReadBuffer) (queue, paletteBuf, 1, 0, k * 4 * sizeof(cl_uchar), palette, 1, &convertEvent,
-				    &readEvent);
-	ret |= (*clWaitForEvents) (1, &readEvent);
-	ret |= (*clReleaseEvent) (convertEvent);
-	ret |= (*clReleaseEvent) (readEvent);
-	ret |= (*clReleaseMemObject) (paletteBuf);
-	return ret;
+int convert_to_uint8(imageResizer *ir, cl_mem centers, unsigned int k,
+                     void *palette) {
+  cl_int ret;
+  cl_mem paletteBuf = (*clCreateBuffer)(deviceCtx, CL_MEM_READ_WRITE,
+                                        k * 4 * sizeof(cl_uchar), NULL, &ret);
+  if (ret != 0)
+    return ret;
+  ret =
+      (*clSetKernelArg)(ir->convertToUint8Kernel, 0, sizeof(cl_mem), &centers);
+  ret |= (*clSetKernelArg)(ir->convertToUint8Kernel, 1, sizeof(cl_mem),
+                           &paletteBuf);
+  if (ret != 0)
+    return ret;
+  size_t globalSize = k;
+  void *convertEvent;
+  ret = (*clEnqueueNDRangeKernel)(queue, ir->convertToUint8Kernel, 1, 0,
+                                  &globalSize, 0, 0, NULL, &convertEvent);
+  if (ret != 0)
+    return ret;
+  void *readEvent;
+  ret =
+      (*clEnqueueReadBuffer)(queue, paletteBuf, 1, 0, k * 4 * sizeof(cl_uchar),
+                             palette, 1, &convertEvent, &readEvent);
+  ret |= (*clWaitForEvents)(1, &readEvent);
+  ret |= (*clReleaseEvent)(convertEvent);
+  ret |= (*clReleaseEvent)(readEvent);
+  ret |= (*clReleaseMemObject)(paletteBuf);
+  return ret;
 }
 
-int add_one(imageResizer * ir, cl_mem assignments, size_t size, void *outData)
-{
-	cl_int ret;
-	ret = (*clSetKernelArg) (ir->addOneKernel, 0, sizeof(cl_mem), &assignments);
-	if (ret != 0)
-		return ret;
-	void *addOneEvent;
-	ret = (*clEnqueueNDRangeKernel) (queue, ir->addOneKernel, 1, 0, &size, 0, 0, NULL, &addOneEvent);
-	if (ret != 0)
-		return ret;
-	void *readEvent;
-	ret = (*clEnqueueReadBuffer) (queue, assignments, 1, 0, size, outData, 1, &addOneEvent, &readEvent);
-	ret |= (*clWaitForEvents) (1, &readEvent);
-	ret |= (*clReleaseEvent) (addOneEvent);
-	ret |= (*clReleaseEvent) (readEvent);
-	return ret;
+int add_one(imageResizer *ir, cl_mem assignments, size_t size, void *outData) {
+  cl_int ret;
+  ret = (*clSetKernelArg)(ir->addOneKernel, 0, sizeof(cl_mem), &assignments);
+  if (ret != 0)
+    return ret;
+  void *addOneEvent;
+  ret = (*clEnqueueNDRangeKernel)(queue, ir->addOneKernel, 1, 0, &size, 0, 0,
+                                  NULL, &addOneEvent);
+  if (ret != 0)
+    return ret;
+  void *readEvent;
+  ret = (*clEnqueueReadBuffer)(queue, assignments, 1, 0, size, outData, 1,
+                               &addOneEvent, &readEvent);
+  ret |= (*clWaitForEvents)(1, &readEvent);
+  ret |= (*clReleaseEvent)(addOneEvent);
+  ret |= (*clReleaseEvent)(readEvent);
+  return ret;
 }
 
-int resize_paletted(void *irp, unsigned int outWidth, unsigned int outHeight, void *outData, void *palette,
-		    unsigned int k)
-{
-	if (k == 0 || k > 255) {
-		return -100;
-	}
-	//make k-1 clusters to that the 0th cluster will be transparent
-	k -= 1;
-	imageResizer *ir = (imageResizer *) irp;
-	cl_mem out;
-	void *resizeKernel;
-	cl_int ret = _resize(ir, outWidth, outHeight, &out, &resizeKernel);
-	if (ret != 0)
-		return ret;
-	//k-means quantization (create paletted image)
+int resize_paletted(void *irp, unsigned int outWidth, unsigned int outHeight,
+                    void *outData, void *palette, unsigned int k) {
+  if (k == 0 || k > 255) {
+    return -100;
+  }
+  // make k-1 clusters to that the 0th cluster will be transparent
+  k -= 1;
+  imageResizer *ir = (imageResizer *)irp;
+  cl_mem out;
+  void *resizeKernel;
+  cl_int ret = _resize(ir, outWidth, outHeight, &out, &resizeKernel);
+  if (ret != 0)
+    return ret;
+  // k-means quantization (create paletted image)
 
-	//allocate buffers
-	cl_mem centers = (*clCreateBuffer) (deviceCtx, CL_MEM_READ_WRITE, k * 4 * sizeof(float), NULL, &ret);
-	if (ret != 0)
-		return ret;
-	cl_mem assignments =
-	    (*clCreateBuffer) (deviceCtx, CL_MEM_READ_WRITE, outWidth * outHeight * sizeof(cl_uchar), NULL, &ret);
-	if (ret != 0)
-		return ret;
-	cl_mem global_sum = (*clCreateBuffer) (deviceCtx, CL_MEM_READ_WRITE, k * 4 * sizeof(cl_ulong), NULL, &ret);
-	if (ret != 0)
-		return ret;
-	cl_mem global_count = (*clCreateBuffer) (deviceCtx, CL_MEM_READ_WRITE, k * sizeof(cl_uint), NULL, &ret);
-	if (ret != 0)
-		return ret;
-	cl_int changed = 0;
-	cl_mem changedBuf = (*clCreateBuffer) (deviceCtx, CL_MEM_READ_WRITE, sizeof(cl_int), NULL, &ret);
-	if (ret != 0)
-		return ret;
-	(*clWaitForEvents) (1, &resizeKernel);
-	(*clReleaseEvent) (resizeKernel);
-	//init with random centers from image
-	ret = random_centers_from_image(ir, out, outWidth, outHeight, centers, k);
-	if (ret != 0)
-		return ret;
-	//find clusters
-	while (1) {
-		changed = 0;
-		ret = setBufferData(changedBuf, sizeof(cl_int), (void *)(&changed));
-		if (ret != 0)
-			return ret;
-		ret = assign_to_centers_kernel(ir, out, outWidth, outHeight, centers, k, assignments, changedBuf);
-		if (ret != 0)
-			return ret;
-		ret = getBufferData(changedBuf, sizeof(cl_int), (void *)(&changed));
-		if (ret != 0)
-			return ret;
-		if (changed == 0)
-			break;
-		ret =
-		    recompute_centers(ir, out, outWidth, outHeight, centers, k, assignments, global_sum, global_count);
-		if (ret != 0)
-			return ret;
-	}
-	//get data
-	((cl_uchar *) palette)[0] = 0;
-	((cl_uchar *) palette)[1] = 0;
-	((cl_uchar *) palette)[2] = 0;
-	((cl_uchar *) palette)[3] = 0;
-	ret = convert_to_uint8(ir, centers, k, palette + (4 * sizeof(cl_uchar)));
-	ret = add_one(ir, assignments, outWidth * outHeight, outData);
-	//release buffers
-	ret |= (*clReleaseMemObject) (changedBuf);
-	ret |= (*clReleaseMemObject) (centers);
-	ret |= (*clReleaseMemObject) (assignments);
-	ret |= (*clReleaseMemObject) (global_sum);
-	ret |= (*clReleaseMemObject) (global_count);
-	ret |= (*clReleaseMemObject) (out);
+  // allocate buffers
+  cl_mem centers = (*clCreateBuffer)(deviceCtx, CL_MEM_READ_WRITE,
+                                     k * 4 * sizeof(float), NULL, &ret);
+  if (ret != 0)
+    return ret;
+  cl_mem assignments =
+      (*clCreateBuffer)(deviceCtx, CL_MEM_READ_WRITE,
+                        outWidth * outHeight * sizeof(cl_uchar), NULL, &ret);
+  if (ret != 0)
+    return ret;
+  cl_mem global_sum = (*clCreateBuffer)(deviceCtx, CL_MEM_READ_WRITE,
+                                        k * 4 * sizeof(cl_ulong), NULL, &ret);
+  if (ret != 0)
+    return ret;
+  cl_mem global_count = (*clCreateBuffer)(deviceCtx, CL_MEM_READ_WRITE,
+                                          k * sizeof(cl_uint), NULL, &ret);
+  if (ret != 0)
+    return ret;
+  cl_int changed = 0;
+  cl_mem changedBuf = (*clCreateBuffer)(deviceCtx, CL_MEM_READ_WRITE,
+                                        sizeof(cl_int), NULL, &ret);
+  if (ret != 0)
+    return ret;
+  (*clWaitForEvents)(1, &resizeKernel);
+  (*clReleaseEvent)(resizeKernel);
+  // init with random centers from image
+  ret = random_centers_from_image(ir, out, outWidth, outHeight, centers, k);
+  if (ret != 0)
+    return ret;
+  // find clusters
+  while (1) {
+    changed = 0;
+    ret = setBufferData(changedBuf, sizeof(cl_int), (void *)(&changed));
+    if (ret != 0)
+      return ret;
+    ret = assign_to_centers_kernel(ir, out, outWidth, outHeight, centers, k,
+                                   assignments, changedBuf);
+    if (ret != 0)
+      return ret;
+    ret = getBufferData(changedBuf, sizeof(cl_int), (void *)(&changed));
+    if (ret != 0)
+      return ret;
+    if (changed == 0)
+      break;
+    ret = recompute_centers(ir, out, outWidth, outHeight, centers, k,
+                            assignments, global_sum, global_count);
+    if (ret != 0)
+      return ret;
+  }
+  // get data
+  ((cl_uchar *)palette)[0] = 0;
+  ((cl_uchar *)palette)[1] = 0;
+  ((cl_uchar *)palette)[2] = 0;
+  ((cl_uchar *)palette)[3] = 0;
+  ret = convert_to_uint8(ir, centers, k, palette + (4 * sizeof(cl_uchar)));
+  ret = add_one(ir, assignments, outWidth * outHeight, outData);
+  // release buffers
+  ret |= (*clReleaseMemObject)(changedBuf);
+  ret |= (*clReleaseMemObject)(centers);
+  ret |= (*clReleaseMemObject)(assignments);
+  ret |= (*clReleaseMemObject)(global_sum);
+  ret |= (*clReleaseMemObject)(global_count);
+  ret |= (*clReleaseMemObject)(out);
 
-	return ret;
+  return ret;
 }

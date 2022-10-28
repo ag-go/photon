@@ -5,7 +5,7 @@ package imgproc
 /*
 #cgo LDFLAGS: -ldl
 
-int init();
+int init(int);
 void* createImageResizer(unsigned int,unsigned int,unsigned int,unsigned int,void*,int*);
 int releaseImageResizer(void*);
 int resize(void*,unsigned int,unsigned int,void*);
@@ -19,8 +19,17 @@ import (
 	"unsafe"
 )
 
-func Init() error {
-	ret := C.init()
+var verbose bool
+
+func Init(v bool) error {
+	verbose = v
+	cVerbose := C.int(0)
+	if verbose {
+		cVerbose = C.int(1)
+	}
+	capt := NewCapturer()
+	defer capt.Dump()
+	ret := C.init(C.int(cVerbose))
 	if ret != C.int(0) {
 		gotError = true
 		return fmt.Errorf("init error %d", ret)
@@ -45,6 +54,8 @@ func NewOpenCLImageResizer(img image.Image) (ImageResizer, error) {
 	}
 	data := imgData(img)
 	var ret C.int
+	capt := NewCapturer()
+	defer capt.Dump()
 	ir.cir = C.createImageResizer(
 		C.uint(img.Bounds().Dx()),
 		C.uint(img.Bounds().Dy()),
@@ -60,6 +71,8 @@ func NewOpenCLImageResizer(img image.Image) (ImageResizer, error) {
 }
 
 func (ir *ImageResizerOpenCL) Release() error {
+	capt := NewCapturer()
+	defer capt.Dump()
 	if ret := C.releaseImageResizer(ir.cir); ret != C.int(0) {
 		return fmt.Errorf("opencl error: %d", ret)
 	}
@@ -72,6 +85,8 @@ func (ir *ImageResizerOpenCL) Resize(maxWidth, maxHeight uint) (image.Image, err
 	outWidth, outHeight := outSize(origWidth, origHeight, maxWidth, maxHeight)
 
 	outData := make([]byte, outWidth*outHeight*ir.pixelSize)
+	capt := NewCapturer()
+	defer capt.Dump()
 	ret := C.resize(
 		ir.cir,
 		C.uint(outWidth),
@@ -102,6 +117,8 @@ func (ir *ImageResizerOpenCL) ResizePaletted(p, maxWidth, maxHeight uint) (*imag
 
 	outData := make([]byte, outWidth*outHeight)
 	paletteData := make([]uint8, p*4)
+	capt := NewCapturer()
+	defer capt.Dump()
 	ret := C.resize_paletted(
 		ir.cir,
 		C.uint(outWidth),
