@@ -8,7 +8,7 @@ photon.events.subscribe(
 		for i = 1, photon.cards:len(), 1 do
 			local card = photon.cards:get(i)
 			local link = card:link()
-			local item = localStorage.getItem(link) 
+			local item = localStorage.getItem(link)
 			if item ~= nil then
 				card:foreground(photon.ColorPurple)
 			end

@@ -182,26 +182,28 @@ For general discussion or patches, use the [mailing list](https://lists.sr.ht/~g
 
 Join the IRC channel: [#photon on irc.libera.chat](http://web.libera.chat/?channels=photon&uio=d4)
 
+Or join my matrix room: [#photon on matrix.mgyar.me](https://matrix.to/#/#photon:matrix.mgyar.me)
+
 ## Contributing
 
 Anyone can contribute to photon:
 
--   Clone the repository.
--   Patch the code.
--   Make some tests.
--   Ensure that your code is properly formatted with gofmt.
--   Ensure that everything works as expected.
--   Ensure that you did not break anything.
--   Do not forget to update the docs.
+- Clone the repository.
+- Patch the code.
+- Make some tests.
+- Ensure that your code is properly formatted with gofmt.
+- Ensure that everything works as expected.
+- Ensure that you did not break anything.
+- Do not forget to update the docs.
 
 Once you are happy with your work, you can create a commit (or several commits). Follow these general rules:
 
--   Limit the first line (title) of the commit message to 60 characters.
--   Use a short prefix for the commit title for readability with `git log --oneline`.
--   Use the body of the commit message to actually explain what your patch does and why it is useful.
--   Address only one issue/topic per commit.
--   If you are fixing a ticket, use appropriate [commit trailers](https://man.sr.ht/git.sr.ht/#referencing-tickets-in-git-commit-messages).
--   If you are fixing a regression introduced by another commit, add a `Fixes:` trailer with the commit id and its title.
+- Limit the first line (title) of the commit message to 60 characters.
+- Use a short prefix for the commit title for readability with `git log --oneline`.
+- Use the body of the commit message to actually explain what your patch does and why it is useful.
+- Address only one issue/topic per commit.
+- If you are fixing a ticket, use appropriate [commit trailers](https://man.sr.ht/git.sr.ht/#referencing-tickets-in-git-commit-messages).
+- If you are fixing a regression introduced by another commit, add a `Fixes:` trailer with the commit id and its title.
 
 There is a great reference for commit messages in the [Linux kernel documentation](https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes).
 
