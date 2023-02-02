@@ -7,13 +7,13 @@ PREFIX?=/usr/local
 BINDIR?=$(PREFIX)/bin
 MANDIR?=$(PREFIX)/share/man
 GO?=go
-GOFLAGS?=-pgo merged.pprof
+GOFLAGS?=
 
 GOSRC:=$(shell find . -name '*.go')
 GOSRC+=go.mod go.sum
 
 photon: $(GOSRC)
-	$(GO) build $(GOFLAGS) -o $@
+	$(GO) build $(GOFLAGS) -pgo merged.pprof -o $@
 
 DOCS := \
 	photon.1 \
