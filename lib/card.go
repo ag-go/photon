@@ -77,7 +77,7 @@ func (card *Card) OpenArticle() {
 	if card.photon.OpenedArticle.Image != "" {
 		card.photon.ImgDownloader.Download(
 			card.photon.OpenedArticle.Image,
-			func(i interface{}) {
+			func(i any) {
 				if card.photon.OpenedArticle == nil {
 					return
 				}

@@ -49,7 +49,7 @@ func (ctx Context) Err() error {
 	return nil
 }
 
-func (ctx Context) Value(key interface{}) interface{} {
+func (ctx Context) Value(key any) any {
 	return nil
 }
 

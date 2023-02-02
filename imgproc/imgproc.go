@@ -66,13 +66,13 @@ func Proc(
 	}
 }
 
-func ProcDelete(key interface{}) {
+func ProcDelete(key any) {
 	imageProcMap.Delete(key)
 }
 
 // clears the image map, serves for EventResize
 func ProcClear() {
-	imageProcMap.Range(func(k, v interface{}) bool {
+	imageProcMap.Range(func(k, v any) bool {
 		imageProcMap.Delete(k)
 		return true
 	})
@@ -82,11 +82,11 @@ type Cache struct {
 	m sync.Map
 }
 
-func (cc *Cache) Load(key interface{}) (interface{}, bool) {
+func (cc *Cache) Load(key any) (any, bool) {
 	return cc.m.Load(key)
 }
 
-func (cc *Cache) Store(key interface{}, val interface{}) {
+func (cc *Cache) Store(key any, val any) {
 	switch i := val.(type) {
 	case image.Image:
 		if gotError {

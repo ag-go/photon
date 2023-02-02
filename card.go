@@ -133,7 +133,7 @@ func (c *Card) DownloadImage(ctx Context) bool {
 	}
 	photon.ImgDownloader.Download(
 		c.Item.Image.URL,
-		func(i interface{}) {
+		func(i any) {
 			c.ItemImage = imgproc.NewImageResizer(i)
 			c.makeSixel(ctx)
 		},

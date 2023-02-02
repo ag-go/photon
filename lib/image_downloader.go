@@ -20,13 +20,13 @@ type ImgDownloader struct {
 }
 
 type ImageCache interface {
-	Load(interface{}) (interface{}, bool)
-	Store(interface{}, interface{})
+	Load(any) (any, bool)
+	Store(any, any)
 }
 
 type imgDownloadReq struct {
 	URL      string
-	Callback func(interface{})
+	Callback func(any)
 }
 
 func newImgDownloader(client *http.Client) *ImgDownloader {
@@ -51,44 +51,46 @@ func newImgDownloader(client *http.Client) *ImgDownloader {
 		}
 	}()
 	// download workers
-	for i := 0; i < runtime.NumCPU(); i++ {
-		go func() {
-			client := d.client
-			if client == nil {
-				client = http.DefaultClient
-			}
-			for req := range reqCh {
-				r, err := http.NewRequest(http.MethodGet, req.URL, nil)
-				if err != nil {
-					log.Println("ERROR: creating request for image:", err)
-					continue
-				}
-				resp, err := client.Do(r)
-				if err != nil {
-					log.Println("ERROR: downloading image:", err)
-					continue
-				}
-				i, _, err := image.Decode(resp.Body)
-				if err != nil {
-					log.Println("ERROR: decoding image:", err, req.URL)
-					continue
-				}
-				resp.Body.Close()
-				d.imgCache.Store(req.URL, i)
-				if req.Callback != nil {
-					if img, ok := d.imgCache.Load(req.URL); ok {
-						req.Callback(img)
-					} else {
-						req.Callback(i)
-					}
-				}
-			}
-		}()
+	for i := 0; i < runtime.GOMAXPROCS(0); i++ {
+		go d.downloadWorker(reqCh)
 	}
 	return d
 }
 
-func (d *ImgDownloader) Download(url string, callback func(interface{})) {
+func (d *ImgDownloader) downloadWorker(reqCh chan imgDownloadReq) {
+	client := d.client
+	if client == nil {
+		client = http.DefaultClient
+	}
+	for req := range reqCh {
+		r, err := http.NewRequest(http.MethodGet, req.URL, nil)
+		if err != nil {
+			log.Println("ERROR: creating request for image:", err)
+			continue
+		}
+		resp, err := client.Do(r)
+		if err != nil {
+			log.Println("ERROR: downloading image:", err)
+			continue
+		}
+		i, _, err := image.Decode(resp.Body)
+		if err != nil {
+			log.Println("ERROR: decoding image:", err, req.URL)
+			continue
+		}
+		resp.Body.Close()
+		d.imgCache.Store(req.URL, i)
+		if req.Callback != nil {
+			if img, ok := d.imgCache.Load(req.URL); ok {
+				req.Callback(img)
+			} else {
+				req.Callback(i)
+			}
+		}
+	}
+}
+
+func (d *ImgDownloader) Download(url string, callback func(any)) {
 	if d.imgCache == nil {
 		d.imgCache = &sync.Map{}
 	}

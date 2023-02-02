@@ -15,7 +15,7 @@ type ImageResizer interface {
 	ResizePaletted(p, maxWidth, maxHeight uint) (*image.Paletted, error)
 }
 
-func NewImageResizer(i interface{}) ImageResizer {
+func NewImageResizer(i any) ImageResizer {
 	if ir, ok := i.(ImageResizer); ok {
 		return ir
 	}

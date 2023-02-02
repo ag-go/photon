@@ -222,10 +222,10 @@ func lexComment(l *lexer) stateFn {
 // errorf returns an error token and terminates the scan
 // by passing back a nil pointer that will be the next
 // state, terminating l.run.
-func (l *lexer) errorf(format string, args ...interface{}) stateFn {
+func (l *lexer) errorf(format string, args ...any) stateFn {
 	l.items <- item{
 		itemError,
-		fmt.Sprintf("%d:%d:"+format, append([]interface{}{l.line, l.pos}, args...)...),
+		fmt.Sprintf("%d:%d:"+format, append([]any{l.line, l.pos}, args...)...),
 	}
 	return nil
 }
