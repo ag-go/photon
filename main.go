@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"image"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
+	"runtime/pprof"
 	"strings"
 	"time"
 	"unicode"
@@ -34,6 +36,7 @@ var CLI struct {
 	DownloadPath    string       `optional:"" default:"$HOME/Downloads" help:"the default download path"`
 	TerminalTitle   string       `short:"t" optional:"" help:"set the terminal title"`
 	Refresh         uint         `short:"r" optional:"" default:"0" help:"set refresh interval in seconds" env:"PHOTON_REFRESH"`
+	Pprof           bool         `optional:"" default:"false" help:"will create a cpu.pprof profiling file"`
 	Paths           []string     `arg:"" optional:"" help:"RSS/Atom urls, config path, or - for stdin"`
 }
 
@@ -48,8 +51,6 @@ var (
 )
 
 func main() {
-	// defer profile.Start(profile.CPUProfile, profile.ProfilePath(".")).Stop()
-	// args
 	kong.Parse(&CLI,
 		kong.Name("photon"),
 		kong.Description("Fast RSS reader as light as a photon"),
@@ -58,6 +59,26 @@ func main() {
 			Compact: true,
 			Summary: true,
 		}))
+	if CLI.Pprof {
+		var filename string
+		for i := 0; ; i++ {
+			if _, err := os.Stat(fmt.Sprintf("cpu%02d.pprof", i)); errors.Is(err, os.ErrNotExist) {
+				filename = fmt.Sprintf("cpu%02d.pprof", i)
+				break
+			}
+		}
+		f, err := os.Create(filename)
+		if err != nil {
+			fmt.Println("could not create CPU profile: ", err)
+			os.Exit(1)
+		}
+		defer f.Close()
+		if err := pprof.StartCPUProfile(f); err != nil {
+			fmt.Println("could not start CPU profile: ", err)
+			os.Exit(1)
+		}
+		defer pprof.StopCPUProfile()
+	}
 
 	isTerminal := isatty.IsTerminal(os.Stdout.Fd())
 	if isTerminal {

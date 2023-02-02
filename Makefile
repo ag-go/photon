@@ -7,7 +7,7 @@ PREFIX?=/usr/local
 BINDIR?=$(PREFIX)/bin
 MANDIR?=$(PREFIX)/share/man
 GO?=go
-GOFLAGS?=
+GOFLAGS?=-pgo merged.pprof
 
 GOSRC:=$(shell find . -name '*.go')
 GOSRC+=go.mod go.sum
