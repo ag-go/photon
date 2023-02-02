@@ -1,6 +1,6 @@
 module git.sr.ht/~ghost08/photon
 
-go 1.19
+go 1.20
 
 require (
 	github.com/alecthomas/kong v0.7.1
@@ -11,13 +11,13 @@ require (
 	github.com/kennygrant/sanitize v1.2.4
 	github.com/mattn/go-isatty v0.0.17
 	github.com/mattn/go-runewidth v0.0.14
-	github.com/mmcdole/gofeed v1.1.3
+	github.com/mmcdole/gofeed v1.2.0
 	github.com/sbani/go-humanizer v0.3.2
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
 	github.com/soniakeys/quant v1.0.0
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/yuin/gopher-lua v1.1.0
-	golang.org/x/exp v0.0.0-20230118134722-a68e582fa157
+	golang.org/x/exp v0.0.0-20230131160201-f062dba9d201
 	golang.org/x/image v0.3.0
 	golang.org/x/net v0.5.0
 )

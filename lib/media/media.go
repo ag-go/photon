@@ -81,7 +81,7 @@ func (e *Extractor) getContentType(link string) (string, error) {
 // determineCommand returns videoCmd or imgCmd by the content-type
 func (e *Extractor) determineCommand(contentType string) (command string) {
 	switch {
-	case strings.HasPrefix(contentType, "video/"), contentType == "image/gif", strings.HasSuffix(contentType, "mpegurl"):
+	case strings.HasPrefix(contentType, "video/"), strings.HasPrefix(contentType, "audio/"), contentType == "image/gif", strings.HasSuffix(contentType, "mpegurl"):
 		command = e.VideoCmd
 	case strings.HasPrefix(contentType, "image/"):
 		command = e.ImageCmd
