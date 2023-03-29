@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"context"
 	"fmt"
 	"image"
 	"io"
@@ -53,12 +54,12 @@ func (card *Card) SaveImage() func(image.Image) {
 	}
 }
 
-func (card *Card) OpenArticle() {
+func (card *Card) OpenArticle(ctx context.Context) {
 	if card == nil {
 		return
 	}
 	if card.Article == nil {
-		article, err := newArticle(card, card.photon.httpClient)
+		article, err := newArticle(ctx, card, card.photon.httpClient)
 		if err != nil {
 			log.Println("ERROR: scraping link:", err)
 			return
@@ -91,7 +92,7 @@ func (card *Card) OpenArticle() {
 
 func (card *Card) GetMedia() (*media.Media, error) {
 	if card == nil {
-		return nil, nil
+		return nil, nil //nolint:nilnil // it doesn't matter if it is nil
 	}
 	if card.Media == nil || len(card.Media.Links) == 0 {
 		m, err := card.photon.mediaExtractor.NewMedia(card.Item.Link)
@@ -150,7 +151,11 @@ func (card *Card) DownloadMedia() {
 			log.Println("ERROR: extracting media link:", err)
 			return
 		}
-		if err := card.downloadLinks(card.Item.Title, m.Links); err != nil {
+		if err := card.downloadLinks(
+			context.TODO(),
+			card.Item.Title,
+			m.Links,
+		); err != nil {
 			log.Println("ERROR: downloading media:", err)
 			return
 		}
@@ -162,7 +167,11 @@ func (card *Card) DownloadLink() {
 		return
 	}
 	go func() {
-		if err := card.downloadLinks(card.Item.Title, []string{card.Item.Link}); err != nil {
+		if err := card.downloadLinks(
+			context.TODO(),
+			card.Item.Title,
+			[]string{card.Item.Link},
+		); err != nil {
 			log.Println("ERROR: downloading link:", err)
 			return
 		}
@@ -174,14 +183,18 @@ func (card *Card) DownloadImage() {
 		return
 	}
 	go func() {
-		if err := card.downloadLinks(card.Item.Title, []string{card.Item.Image.URL}); err != nil {
+		if err := card.downloadLinks(
+			context.TODO(),
+			card.Item.Title,
+			[]string{card.Item.Image.URL},
+		); err != nil {
 			log.Println("ERROR: downloading image:", err)
 			return
 		}
 	}()
 }
 
-func (card *Card) downloadLinks(name string, links []string) error {
+func (card *Card) downloadLinks(ctx context.Context, name string, links []string) error {
 	// get download path
 	downloadPath := card.photon.downloadPath
 	if strings.Contains(downloadPath, "$HOME") {
@@ -199,7 +212,7 @@ func (card *Card) downloadLinks(name string, links []string) error {
 	}
 	for _, link := range links {
 		// get response
-		req, err := http.NewRequest(http.MethodGet, link, nil)
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, link, http.NoBody)
 		if err != nil {
 			return err
 		}
@@ -208,7 +221,6 @@ func (card *Card) downloadLinks(name string, links []string) error {
 		if err != nil {
 			return err
 		}
-		defer resp.Body.Close()
 		var bodyReader io.Reader = resp.Body
 		contentType := resp.Header.Get("Content-Type")
 		if contentType == "" {
@@ -237,13 +249,16 @@ func (card *Card) downloadLinks(name string, links []string) error {
 	return nil
 }
 
-func (card *Card) OpenBrowser() {
+func (card *Card) OpenBrowser() error {
 	if card == nil {
-		return
+		return nil
 	}
-	open.Start(card.Item.Link)
+	if err := open.Start(card.Item.Link); err != nil {
+		return err
+	}
 	events.Emit(&events.LinkOpened{
 		Link: card.Item.Link,
 		Card: newCardFunc(card),
 	})
+	return nil
 }

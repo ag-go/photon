@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -16,8 +17,8 @@ type Article struct {
 	TopImage imgproc.ImageResizer
 }
 
-func newArticle(card *Card, client *http.Client) (*Article, error) {
-	req, err := http.NewRequest(http.MethodGet, card.Item.Link, nil)
+func newArticle(ctx context.Context, card *Card, client *http.Client) (*Article, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, card.Item.Link, http.NoBody)
 	if err != nil {
 		return nil, err
 	}

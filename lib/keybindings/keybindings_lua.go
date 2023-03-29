@@ -6,7 +6,7 @@ import (
 )
 
 func NewLValue(L *lua.LState, kb *Registry) lua.LValue {
-	var exports = map[string]lua.LGFunction{
+	exports := map[string]lua.LGFunction{
 		"add": keybindingsAdd(kb),
 	}
 	return L.SetFuncs(L.NewTable(), exports)

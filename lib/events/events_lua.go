@@ -5,7 +5,7 @@ import (
 )
 
 func New(L *lua.LState) lua.LValue {
-	var exports = map[string]lua.LGFunction{
+	exports := map[string]lua.LGFunction{
 		"subscribe": eventsSubscribe,
 	}
 	mod := L.SetFuncs(L.NewTable(), exports)

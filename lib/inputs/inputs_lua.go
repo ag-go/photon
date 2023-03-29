@@ -5,7 +5,7 @@ import (
 )
 
 func New(L *lua.LState, in *Inputs) lua.LValue {
-	var exports = map[string]lua.LGFunction{
+	exports := map[string]lua.LGFunction{
 		"len":    inputsLen(in),
 		"get":    inputsGet(in),
 		"set":    inputsSet(in),

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"image"
 	"io"
+	"log"
 
 	"golang.org/x/exp/constraints"
 )
@@ -60,7 +61,9 @@ func (ss *SixelScreen) append(d []byte) {
 
 func (ss *SixelScreen) Write(w io.Writer) {
 	for i := 0; i < ss.length; i++ {
-		w.Write(ss.data[i])
+		if _, err := w.Write(ss.data[i]); err != nil {
+			log.Println(err)
+		}
 	}
 }
 

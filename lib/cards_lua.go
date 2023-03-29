@@ -11,7 +11,7 @@ const (
 
 func (p *Photon) cardsLoader(L *lua.LState) int {
 	p.cardLoader(L)
-	var cardsMethods = map[string]lua.LGFunction{
+	cardsMethods := map[string]lua.LGFunction{
 		"len":    cardsLength,
 		"get":    cardsGet,
 		"set":    cardsSet,

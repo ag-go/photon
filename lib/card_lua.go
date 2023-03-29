@@ -1,6 +1,8 @@
 package lib
 
 import (
+	"context"
+
 	"git.sr.ht/~ghost08/photon/lib/media"
 	lua "github.com/yuin/gopher-lua"
 )
@@ -10,7 +12,7 @@ const (
 )
 
 func (p *Photon) cardLoader(L *lua.LState) int {
-	var cardMethods = map[string]lua.LGFunction{
+	cardMethods := map[string]lua.LGFunction{
 		"link":        cardItemLink,
 		"image":       cardItemImage,
 		"title":       cardItemTitle,
@@ -26,12 +28,12 @@ func (p *Photon) cardLoader(L *lua.LState) int {
 		},
 		"openBrowser": func(L *lua.LState) int {
 			card := checkCard(L, 1)
-			card.OpenBrowser()
+			_ = card.OpenBrowser()
 			return 0
 		},
 		"openArticle": func(L *lua.LState) int {
 			card := checkCard(L, 1)
-			card.OpenArticle()
+			card.OpenArticle(context.Background())
 			return 0
 		},
 		"foreground": func(L *lua.LState) int {

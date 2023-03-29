@@ -12,6 +12,7 @@ int resize(void*,unsigned int,unsigned int,void*);
 int resize_paletted(void*,unsigned int,unsigned int,void*,void*,unsigned int);
 */
 import "C"
+
 import (
 	"fmt"
 	"image"
@@ -29,7 +30,7 @@ func Init(v bool) error {
 	}
 	capt := NewCapturer()
 	defer capt.Dump()
-	ret := C.init(C.int(cVerbose))
+	ret := C.init(cVerbose)
 	if ret != C.int(0) {
 		gotError = true
 		return fmt.Errorf("init error %d", ret)
@@ -109,7 +110,7 @@ func (ir *ImageResizerOpenCL) Resize(maxWidth, maxHeight uint) (image.Image, err
 
 func (ir *ImageResizerOpenCL) ResizePaletted(p, maxWidth, maxHeight uint) (*image.Paletted, error) {
 	if maxWidth == 0 || maxHeight == 0 {
-		return nil, nil
+		return nil, nil //nolint:nilnil // if the image has no size then returning nil nil is ok, it is checked by the caller
 	}
 	origWidth := uint(ir.bounds.Dx())
 	origHeight := uint(ir.bounds.Dy())

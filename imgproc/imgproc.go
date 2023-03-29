@@ -86,7 +86,7 @@ func (cc *Cache) Load(key any) (any, bool) {
 	return cc.m.Load(key)
 }
 
-func (cc *Cache) Store(key any, val any) {
+func (cc *Cache) Store(key, val any) {
 	switch i := val.(type) {
 	case image.Image:
 		if gotError {

@@ -61,7 +61,7 @@ func (c *Capturer) Dump() {
 	b := <-c.out
 
 	// Restore original Stdout.
-	syscall.Dup3(c.origStdout, syscall.Stdout, 0)
+	_ = syscall.Dup3(c.origStdout, syscall.Stdout, 0)
 	syscall.Close(c.origStdout)
 
 	log.Println(string(b))

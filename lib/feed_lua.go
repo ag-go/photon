@@ -11,7 +11,7 @@ const (
 )
 
 func feedLoader(L *lua.LState) int {
-	var feedMethods = map[string]lua.LGFunction{
+	feedMethods := map[string]lua.LGFunction{
 		"title":       feedTitle,
 		"description": feedDescription,
 		"link":        feedLink,
@@ -30,7 +30,7 @@ func feedLoader(L *lua.LState) int {
 	mt := L.NewTypeMetatable(luaFeedTypeName)
 	L.SetField(mt, "__index", L.SetFuncs(L.NewTable(), feedMethods))
 
-	var personMethods = map[string]lua.LGFunction{
+	personMethods := map[string]lua.LGFunction{
 		"name":  personName,
 		"email": personEmail,
 	}

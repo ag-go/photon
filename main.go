@@ -205,7 +205,7 @@ func main() {
 		// Begin synchronized update (BSU) ESC P = 1 s ESC \
 		os.Stderr.Write([]byte("\033P=1s\033\\"))
 		// draw main widget + status bar
-		var widgetStatus richtext
+		var widgetStatus Richtext
 		switch cb.State() {
 		case states.Normal, states.Search:
 			widgetStatus = grid.Draw(ctx, s, sixelScreen, fullRedraw)
@@ -220,7 +220,7 @@ func main() {
 		drawStatusBar(
 			s,
 			append(
-				richtext{{Text: status, Style: tcell.StyleDefault}},
+				Richtext{{Text: status, Style: tcell.StyleDefault}},
 				widgetStatus...,
 			),
 		)
@@ -247,7 +247,7 @@ func main() {
 	}
 }
 
-func drawStatusBar(s tcell.Screen, t richtext) {
+func drawStatusBar(s tcell.Screen, t Richtext) {
 	w, h := s.Size()
 	X := w - t.Len()
 	Y := h - 1
@@ -321,7 +321,7 @@ func defaultKeyBindings(s tcell.Screen, grid *Grid, quit *context.CancelFunc) {
 		return nil
 	})
 	photon.KeyBindings.Add(states.Normal, "<enter>", func() error {
-		SelectedCard.OpenArticle()
+		SelectedCard.OpenArticle(context.Background())
 		if openedArticle != nil {
 			openedArticle.Mode = articleModeFromString(CLI.ArticleMode)
 		}
@@ -344,8 +344,7 @@ func defaultKeyBindings(s tcell.Screen, grid *Grid, quit *context.CancelFunc) {
 		return nil
 	})
 	photon.KeyBindings.Add(states.Normal, "o", func() error {
-		SelectedCard.OpenBrowser()
-		return nil
+		return SelectedCard.OpenBrowser()
 	})
 	photon.KeyBindings.Add(states.Normal, "<esc>", func() error {
 		if command == "" {

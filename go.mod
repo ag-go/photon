@@ -9,7 +9,7 @@ require (
 	github.com/gdamore/tcell/v2 v2.6.0
 	github.com/go-shiori/go-readability v0.0.0-20220215145315-dd6828d2f09b
 	github.com/kennygrant/sanitize v1.2.4
-	github.com/mattn/go-isatty v0.0.17
+	github.com/mattn/go-isatty v0.0.18
 	github.com/mattn/go-runewidth v0.0.14
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/sbani/go-humanizer v0.3.2
@@ -17,7 +17,7 @@ require (
 	github.com/soniakeys/quant v1.0.0
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/yuin/gopher-lua v1.1.0
-	golang.org/x/exp v0.0.0-20230310171629-522b1b587ee0
+	golang.org/x/exp v0.0.0-20230321023759-10a507213a29
 	golang.org/x/image v0.6.0
 	golang.org/x/net v0.8.0
 )
@@ -34,7 +34,6 @@ require (
 	github.com/mmcdole/goxpp v1.1.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect

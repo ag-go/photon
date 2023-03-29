@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image"
+	"io"
 	"log"
 	"math"
 	"os/exec"
@@ -65,14 +66,14 @@ type Article struct {
 	*lib.Article
 	scrollOffset int
 	lastLine     int
-	contentLines []richtext
+	contentLines []Richtext
 	Mode         ArticleMode
 
 	imgSixel       *imgproc.Sixel
 	underImageRune rune
 }
 
-func (a *Article) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScreen) (statusBarText richtext) {
+func (a *Article) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScreen) Richtext {
 	s.Clear()
 	articleWidth := min(72, ctx.Width)
 	if a.contentLines == nil {
@@ -163,12 +164,11 @@ func (a *Article) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelSc
 	// status bar text - article state + scroll percentage
 	above := a.scrollOffset
 	below := len(a.contentLines) - a.lastLine - 1
-	statusBarText = richtext{
+	return Richtext{
 		{Text: a.Mode.String(), Style: tcell.StyleDefault.Foreground(tcell.ColorOrangeRed)},
 		{Text: "   ", Style: tcell.StyleDefault},
 		{Text: scrollPercentage(above, below), Style: tcell.StyleDefault},
 	}
-	return
 }
 
 func (a *Article) Scroll(d int) {
@@ -195,7 +195,7 @@ func (a *Article) Clear() {
 	a.imgSixel = nil
 }
 
-type richtext []textobject
+type Richtext []textobject
 
 type textobject struct {
 	Text  string
@@ -203,28 +203,28 @@ type textobject struct {
 	Link  string
 }
 
-func (rt richtext) Len() (length int) {
+func (rt Richtext) Len() (length int) {
 	for _, to := range rt {
 		length += len(to.Text)
 	}
-	return
+	return length
 }
 
-func richtextFromText(text string, width int) []richtext {
+func richtextFromText(text string, width int) []Richtext {
 	return richtextWordWrap(
-		richtext{{Text: text, Style: tcell.StyleDefault}},
+		Richtext{{Text: text, Style: tcell.StyleDefault}},
 		width,
 	)
 }
 
-func richtextFromArticle(node *html.Node, textContent string, width int) []richtext {
+func richtextFromArticle(node *html.Node, textContent string, width int) []Richtext {
 	buf, err := parseArticleContent(node)
 	if err != nil {
 		log.Println(err)
 		return nil
 	}
 	if len(buf) == 0 {
-		buf = richtext{
+		buf = Richtext{
 			{
 				Text:  textContent,
 				Style: tcell.StyleDefault,
@@ -234,7 +234,7 @@ func richtextFromArticle(node *html.Node, textContent string, width int) []richt
 	return richtextWordWrap(buf, width)
 }
 
-func parseArticleContent(node *html.Node) (rt richtext, err error) {
+func parseArticleContent(node *html.Node) (rt Richtext, err error) {
 	if node == nil {
 		return
 	}
@@ -356,10 +356,10 @@ func parseArticleContent(node *html.Node) (rt richtext, err error) {
 	return rt, nil
 }
 
-func richtextWordWrap(buf richtext, width int) []richtext {
+func richtextWordWrap(buf Richtext, width int) []Richtext {
 	// word wrap with textobjects
-	var lines []richtext
-	var line richtext
+	var lines []Richtext
+	var line Richtext
 	var lineLength, wordLength int
 	var txt, word strings.Builder
 	for _, to := range buf {
@@ -414,7 +414,7 @@ func richtextWordWrap(buf richtext, width int) []richtext {
 		if lineLength+wordLength > width {
 			line = append(line, textobject{Text: txt.String(), Style: to.Style, Link: to.Link})
 			lines = append(lines, line)
-			line = richtext{textobject{
+			line = Richtext{textobject{
 				Text:  word.String() + " ",
 				Style: to.Style,
 				Link:  to.Link,
@@ -461,7 +461,9 @@ func renderArticleContent(h string) string {
 	}
 	go func() {
 		defer in.Close()
-		in.Write([]byte(h))
+		if _, err := io.WriteString(in, h); err != nil {
+			log.Println(err)
+		}
 	}()
 	r, err := c.CombinedOutput()
 	if err != nil {

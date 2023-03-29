@@ -69,13 +69,13 @@ func (p *Photon) initLuaState() {
 	p.luaState.PreloadModule("photon", p.photonLoader)
 	p.luaState.PreloadModule("http", gluahttp.NewHttpModule(p.httpClient).Loader)
 	cache, _ := os.UserCacheDir()
-	os.MkdirAll(filepath.Join(cache, "photon"), 0755)
+	os.MkdirAll(filepath.Join(cache, "photon"), 0o755)
 	localStorage = ls.New(filepath.Join(cache, "photon", "localStorage"))
 	p.luaState.PreloadModule("localStorage", localStorage.Loader)
 }
 
 func (p *Photon) photonLoader(L *lua.LState) int {
-	var exports = map[string]lua.LGFunction{
+	exports := map[string]lua.LGFunction{
 		"state": p.state,
 	}
 	mod := L.SetFuncs(L.NewTable(), exports)
@@ -127,7 +127,7 @@ func (p *Photon) state(L *lua.LState) int {
 const luaSelectedCardTypeName = "photon.selectedCardType"
 
 func (p *Photon) registerTypeSelectedCard(L *lua.LState) {
-	var selectedCardMethods = map[string]lua.LGFunction{
+	selectedCardMethods := map[string]lua.LGFunction{
 		"posX": func(L *lua.LState) int {
 			scp := p.cb.SelectedCardPos()
 			L.Push(lua.LNumber(scp.X))

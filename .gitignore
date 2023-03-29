@@ -8,3 +8,4 @@ photon
 build-dir/
 flatpak/
 .ccls-cache/
+lint.txt

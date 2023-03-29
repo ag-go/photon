@@ -8,9 +8,7 @@ import (
 	"unicode"
 )
 
-var (
-	eof = rune(0)
-)
+var eof = rune(0)
 
 type itemType int
 

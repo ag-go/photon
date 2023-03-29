@@ -16,7 +16,7 @@ func (s *HTTPSettings) Client() *http.Client {
 	client := &http.Client{
 		Transport: &photonTransport{
 			T: &http.Transport{
-				TLSClientConfig: &tls.Config{InsecureSkipVerify: s.Insecure}, //nolint:gosec
+				TLSClientConfig: &tls.Config{InsecureSkipVerify: s.Insecure}, //nolint:gosec // user can decide if he wants to be insecure
 			},
 			s: s,
 		},

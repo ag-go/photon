@@ -4,8 +4,9 @@ import (
 	"image"
 	"math"
 
-	"git.sr.ht/~ghost08/photon/imgproc"
 	"github.com/gdamore/tcell/v2"
+
+	"git.sr.ht/~ghost08/photon/imgproc"
 )
 
 type Grid struct {
@@ -19,7 +20,7 @@ type Grid struct {
 	childHeight      int
 }
 
-func (g *Grid) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScreen, full bool) (statusBarText richtext) {
+func (g *Grid) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScreen, full bool) Richtext {
 	margin := (ctx.Width % g.Columns) / 2
 	if SelectedCard == nil && photon.VisibleCards != nil {
 		SelectedCardPos = image.Point{
@@ -81,8 +82,7 @@ func (g *Grid) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScree
 	above := (g.FirstChildIndex/g.Columns)*g.childHeight - g.FirstChildOffset
 	allRows := int(math.Ceil(float64(len(photon.VisibleCards)) / float64(g.Columns)))
 	below := (allRows-(g.LastChildIndex/g.Columns)-1)*g.childHeight + g.LastChildOffset
-	statusBarText = richtext{{Text: scrollPercentage(above, below), Style: tcell.StyleDefault}}
-	return
+	return Richtext{{Text: scrollPercentage(above, below), Style: tcell.StyleDefault}}
 }
 
 func (g *Grid) Resize(ctx Context) {
