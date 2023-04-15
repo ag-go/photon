@@ -1,6 +1,7 @@
 package inputs
 
 import (
+	"errors"
 	"fmt"
 	"io"
 )
@@ -10,7 +11,7 @@ func Parse(r io.Reader) (Inputs, error) {
 	s := &scanner{l: lex(r)}
 	urls, err := parseConf(s)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing config file: %s", err)
+		return nil, fmt.Errorf("error parsing config file: %w", err)
 	}
 	return urls, nil
 }
@@ -36,7 +37,7 @@ func parseConf(s *scanner) (Inputs, error) {
 	for i := s.next(); i.typ != itemEOF; i = s.next() {
 		switch i.typ {
 		case itemError:
-			return nil, fmt.Errorf(i.val)
+			return nil, errors.New(i.val)
 		case itemComment:
 		case itemCmd, itemURL:
 			urls = append(urls, i.val)

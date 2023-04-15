@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"context"
 	"image"
 	_ "image/gif"
 	_ "image/jpeg"
@@ -29,7 +30,7 @@ type imgDownloadReq struct {
 	Callback func(any)
 }
 
-func newImgDownloader(client *http.Client) *ImgDownloader {
+func newImgDownloader(ctx context.Context, client *http.Client) *ImgDownloader {
 	d := &ImgDownloader{
 		client:    client,
 		receiveCh: make(chan imgDownloadReq, 1024),
@@ -52,18 +53,18 @@ func newImgDownloader(client *http.Client) *ImgDownloader {
 	}()
 	// download workers
 	for i := 0; i < runtime.GOMAXPROCS(0); i++ {
-		go d.downloadWorker(reqCh)
+		go d.downloadWorker(ctx, reqCh)
 	}
 	return d
 }
 
-func (d *ImgDownloader) downloadWorker(reqCh chan imgDownloadReq) {
+func (d *ImgDownloader) downloadWorker(ctx context.Context, reqCh chan imgDownloadReq) {
 	client := d.client
 	if client == nil {
 		client = http.DefaultClient
 	}
 	for req := range reqCh {
-		r, err := http.NewRequest(http.MethodGet, req.URL, nil)
+		r, err := http.NewRequestWithContext(ctx, http.MethodGet, req.URL, http.NoBody)
 		if err != nil {
 			log.Println("ERROR: creating request for image:", err)
 			continue

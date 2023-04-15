@@ -95,7 +95,7 @@ func (card *Card) GetMedia() (*media.Media, error) {
 		return nil, nil //nolint:nilnil // it doesn't matter if it is nil
 	}
 	if card.Media == nil || len(card.Media.Links) == 0 {
-		m, err := card.photon.mediaExtractor.NewMedia(card.Item.Link)
+		m, err := card.photon.mediaExtractor.NewMedia(context.TODO(), card.Item.Link)
 		if err != nil {
 			return nil, err
 		}
@@ -136,7 +136,7 @@ func (card *Card) RunMedia() {
 			)
 			return
 		}
-		card.Media.Run()
+		card.Media.Run(context.TODO())
 	}()
 }
 

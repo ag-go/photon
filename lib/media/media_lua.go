@@ -36,7 +36,7 @@ func mediaIndex(L *lua.LState) int {
 	case "contentType":
 		return mediaContentType(media, L)
 	case "run":
-		media.Run()
+		media.Run(L.Context())
 	}
 
 	return 0

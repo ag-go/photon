@@ -124,7 +124,9 @@ func main() {
 	} else {
 		options = append(options, lib.WithImageCache(&imgproc.Cache{}))
 	}
-	photon, err = lib.New(cb, CLI.Paths, options...)
+	ctx, quit := WithCancel(Background())
+
+	photon, err = lib.New(ctx, cb, CLI.Paths, options...)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -142,7 +144,6 @@ func main() {
 	}
 	defer s.Fini()
 
-	ctx, quit := WithCancel(Background())
 	grid.Resize(ctx)
 
 	go func() {
@@ -192,18 +193,18 @@ func main() {
 					openedArticle.Clear()
 				}
 				ctx, quit = WithCancel(newCtx)
-				ctx.Height -= 1
+				ctx.Height--
 				redraw(true)
 			}
 		}
 	}()
 
-	ctx.Height -= 1
+	ctx.Height--
 	var fullRedraw bool
 	sixelScreen := &imgproc.SixelScreen{}
 	for {
 		// Begin synchronized update (BSU) ESC P = 1 s ESC \
-		os.Stderr.Write([]byte("\033P=1s\033\\"))
+		os.Stderr.WriteString("\033P=1s\033\\")
 		// draw main widget + status bar
 		var widgetStatus Richtext
 		switch cb.State() {
@@ -237,7 +238,7 @@ func main() {
 		sixelScreen.Write(os.Stderr)
 		sixelScreen.Reset()
 		// end synchronized update (ESU) ESC P = 2 s ESC \
-		os.Stderr.Write([]byte("\033P=2s\033\\"))
+		os.Stderr.WriteString("\033P=2s\033\\")
 		// wait for another redraw event or quit
 		select {
 		case <-ctx.Done():
@@ -400,26 +401,6 @@ func defaultKeyBindings(s tcell.Screen, grid *Grid, quit *context.CancelFunc) {
 		osc52(SelectedCard.Item.Link)
 		return nil
 	})
-	// copy item image
-	/*
-		photon.KeyBindings.Add(states.Normal, "yi", func() error {
-			if SelectedCard == nil {
-				return nil
-			}
-			if SelectedCard.ItemImage == nil {
-				return nil
-			}
-			if !clip {
-				return nil
-			}
-			var buf bytes.Buffer
-			if err := png.Encode(&buf, SelectedCard.ItemImage.(image.Image)); err != nil {
-				return fmt.Errorf("encoding image: %w", err)
-			}
-			clipboard.Write(clipboard.FmtImage, buf.Bytes())
-			return nil
-		})
-	*/
 	// download media
 	photon.KeyBindings.Add(states.Normal, "dm", func() error {
 		SelectedCard.DownloadMedia()

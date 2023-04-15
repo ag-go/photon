@@ -2,6 +2,7 @@
 package ls
 
 import (
+	"errors"
 	"log"
 
 	"github.com/syndtr/goleveldb/leveldb"
@@ -73,7 +74,7 @@ func (ls *LocalStorage) getItem(L *lua.LState) int {
 	db := ls.open()
 	var val lua.LValue
 	v, err := db.Get([]byte(key), nil)
-	if err == leveldb.ErrNotFound {
+	if errors.Is(err, leveldb.ErrNotFound) {
 		return 0
 	}
 	if err != nil {

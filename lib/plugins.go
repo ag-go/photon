@@ -27,7 +27,7 @@ func (p *Photon) loadPlugins() error {
 	p.initLuaState()
 	for _, pluginPath := range plugins {
 		if err := p.luaState.DoFile(pluginPath); err != nil {
-			return fmt.Errorf("loading plugin: %s\n%s", pluginPath, err)
+			return fmt.Errorf("loading plugin: %s\n%w", pluginPath, err)
 		}
 	}
 	return nil

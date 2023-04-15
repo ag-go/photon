@@ -1,6 +1,7 @@
 package media
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -26,8 +27,8 @@ type Media struct {
 	ContentType  string
 }
 
-func (e *Extractor) NewMedia(link string) (*Media, error) {
-	ct, err := e.getContentType(link)
+func (e *Extractor) NewMedia(ctx context.Context, link string) (*Media, error) {
+	ct, err := e.getContentType(ctx, link)
 	if err != nil {
 		return nil, fmt.Errorf("media link - getting content-type: %w ", err)
 	}
@@ -36,7 +37,7 @@ func (e *Extractor) NewMedia(link string) (*Media, error) {
 		return &Media{e: e, OriginalLink: link, Links: []string{link}, ContentType: ct}, nil
 	}
 	cmd := strings.Split(strings.TrimSpace(strings.ReplaceAll(e.ExtractorCmd, "%", link)), " ")
-	output, err := exec.Command(cmd[0], cmd[1:]...).Output() //nolint:gosec
+	output, err := exec.Command(cmd[0], cmd[1:]...).Output() //nolint:gosec // we trust the user
 	if err != nil {
 		return nil, fmt.Errorf("extracting media link [%s]: %w (%s)", link, err, string(output))
 	}
@@ -52,18 +53,18 @@ func (e *Extractor) NewMedia(link string) (*Media, error) {
 	if len(links) == 0 {
 		return nil, fmt.Errorf("extracting media link: no links extracted")
 	}
-	contentType, err := e.getContentType(links[0])
+	contentType, err := e.getContentType(ctx, links[0])
 	if err != nil {
 		return nil, fmt.Errorf("getting media link content-type: %w", err)
 	}
 	return &Media{e: e, OriginalLink: link, Links: links, ContentType: contentType}, nil
 }
 
-func (e *Extractor) getContentType(link string) (string, error) {
+func (e *Extractor) getContentType(ctx context.Context, link string) (string, error) {
 	if strings.HasPrefix(link, "magnet:") {
 		return "magnet-link", nil
 	}
-	req, err := http.NewRequest(http.MethodHead, link, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodHead, link, http.NoBody)
 	if err != nil {
 		return "", fmt.Errorf("creating HEAD request for content-type detection: %w", err)
 	}
@@ -91,7 +92,7 @@ func (e *Extractor) determineCommand(contentType string) (command string) {
 	return strings.TrimSpace(command)
 }
 
-func (media *Media) Run() {
+func (media *Media) Run(ctx context.Context) {
 	command := media.e.determineCommand(media.ContentType)
 	if command == "" {
 		log.Println("ERROR: could not determine content-type:", media.ContentType)
@@ -99,7 +100,7 @@ func (media *Media) Run() {
 	}
 	// run command with downloaded torrent file
 	if media.ContentType == "application/x-bittorrent" {
-		req, err := http.NewRequest(http.MethodGet, media.Links[0], nil)
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, media.Links[0], http.NoBody)
 		if err != nil {
 			log.Printf("ERROR: downloading torrent file - creating http request: %s", err)
 			return
@@ -124,7 +125,7 @@ func (media *Media) Run() {
 			return
 		}
 		cmd := strings.Split(strings.ReplaceAll(command, "%", f.Name()), " ")
-		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil { //nolint:gosec
+		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil { //nolint:gosec // we trust the user
 			log.Printf("ERROR: running media command (%s): %s", strings.Join(cmd, " "), err)
 		}
 		return
@@ -137,7 +138,7 @@ func (media *Media) Run() {
 			args = fmt.Sprintf("%s --audio-file=%s", media.Links[0], media.Links[1])
 		}
 		cmd := strings.Split(strings.ReplaceAll(command, "%", args), " ")
-		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil { //nolint:gosec
+		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil { //nolint:gosec // we trust the user
 			log.Printf("ERROR: running media command (%s): %s", strings.Join(cmd, " "), err)
 		}
 		return
@@ -145,13 +146,13 @@ func (media *Media) Run() {
 	// run command with the direct item link
 	if strings.Contains(command, "$") {
 		cmd := strings.Split(strings.ReplaceAll(command, "$", media.OriginalLink), " ")
-		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil { //nolint:gosec
+		if err := exec.Command(cmd[0], cmd[1:]...).Run(); err != nil { //nolint:gosec // we trust the user
 			log.Printf("ERROR: running media command (%s): %s", strings.Join(cmd, " "), err)
 		}
 		return
 	}
 	// run command and pipe the media data to it's stdin
-	req, err := http.NewRequest(http.MethodGet, media.Links[0], nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, media.Links[0], http.NoBody)
 	if err != nil {
 		log.Println("ERROR: creating GET request for media link:", err)
 		return
@@ -162,7 +163,7 @@ func (media *Media) Run() {
 		return
 	}
 	cmd := strings.Split(command, " ")
-	c := exec.Command(cmd[0], cmd[1:]...) //nolint:gosec
+	c := exec.Command(cmd[0], cmd[1:]...) //nolint:gosec // we trust the user
 	stdin, err := c.StdinPipe()
 	if err != nil {
 		log.Println("ERROR: getting stdin of command:", err)

@@ -63,7 +63,7 @@ type Status struct {
 	cancel context.CancelFunc
 }
 
-func New(cb Callbacks, paths []string, options ...Option) (*Photon, error) {
+func New(ctx context.Context, cb Callbacks, paths []string, options ...Option) (*Photon, error) {
 	p := &Photon{
 		KeyBindings: keybindings.NewRegistry(cb.State),
 		cb:          cb,
@@ -74,7 +74,7 @@ func New(cb Callbacks, paths []string, options ...Option) (*Photon, error) {
 	}
 	p.feedInputs = feedInputs
 	p.mediaExtractor = &media.Extractor{Client: p.httpClient}
-	p.ImgDownloader = newImgDownloader(p.httpClient)
+	p.ImgDownloader = newImgDownloader(ctx, p.httpClient)
 	for _, o := range options {
 		o(p)
 	}
@@ -190,7 +190,7 @@ func (p *Photon) DownloadFeeds() {
 						command = append(command, c)
 					}
 				}
-				cmd := exec.Command(command[0], command[1:]...) //nolint:gosec
+				cmd := exec.Command(command[0], command[1:]...) //nolint:gosec // we trust the user
 				var stdout bytes.Buffer
 				cmd.Stdout = &stdout
 				if err := cmd.Run(); err != nil {
@@ -209,11 +209,6 @@ func (p *Photon) DownloadFeeds() {
 				feeds <- nil
 				return
 			}
-			/*
-				if f.Image != nil && f.Image.URL != "" {
-					p.ImgDownloader.Download(f.Image.URL, nil)
-				}
-			*/
 			feeds <- f
 		}()
 	}

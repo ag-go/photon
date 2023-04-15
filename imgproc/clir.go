@@ -32,8 +32,7 @@ func NewImageResizer(i any) ImageResizer {
 	return ir
 }
 
-func outSize(origWidth, origHeight, maxWidth, maxHeight uint) (uint, uint) {
-	var outWidth, outHeight uint
+func outSize(origWidth, origHeight, maxWidth, maxHeight uint) (outWidth, outHeight uint) {
 	// Preserve aspect ratio
 	if origWidth >= origHeight {
 		outHeight = origHeight * maxWidth / origWidth

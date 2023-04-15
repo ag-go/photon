@@ -49,7 +49,7 @@ func (ss KeyEvents) String() string {
 
 func parseState(s string) (string, KeyEvent, error) {
 	ns, mod := modPrefix(s)
-	if len(ns) == 0 {
+	if ns == "" {
 		return "", KeyEvent{}, fmt.Errorf("not valid keybinding string: %s", s)
 	}
 	r, size := utf8.DecodeRuneInString(ns)
@@ -77,7 +77,7 @@ func modPrefix(s string) (string, Modifiers) {
 func parseStates(s string) (KeyEvents, error) {
 	var ss KeyEvents
 	for {
-		if len(s) == 0 {
+		if s == "" {
 			break
 		}
 		var err error
