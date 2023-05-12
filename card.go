@@ -76,7 +76,28 @@ func (c *Card) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScree
 		}
 	}
 	drawLinesWordwrap(s, ctx.X+1, ctx.Height-headerHeight+ctx.Y, ctx.Width-3, 2, c.Item.Title, style.Bold(true))
-	drawLine(s, ctx.X+1, ctx.Height-headerHeight+ctx.Y+2, ctx.Width-3, c.Feed.Title, style.Italic(true))
+
+	var author string
+	switch len(c.Item.Authors) {
+	case 0:
+		author = c.Feed.Title
+		break
+	case 1:
+		author = c.Item.Authors[0].Name
+		break
+	default:
+		for i, item := range c.Item.Authors {
+			author += item.Name
+			if i-1 == len(c.Item.Authors) {
+				author += ", and "
+			} else {
+				author += ", "
+			}
+		}
+		break
+	}
+	drawLine(s, ctx.X+1, ctx.Height-headerHeight+ctx.Y+2, ctx.Width-3, author, style.Italic(true))
+
 	drawLine(s, ctx.X+1, ctx.Height-headerHeight+ctx.Y+3, ctx.Width-3, htime.Difference(time.Now(), *c.Item.PublishedParsed), style.Italic(true))
 
 	if c.DownloadImage(ctx) {
