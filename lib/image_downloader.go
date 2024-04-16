@@ -52,7 +52,7 @@ func newImgDownloader(ctx context.Context, client *http.Client) *ImgDownloader {
 		}
 	}()
 	// download workers
-	for i := 0; i < runtime.GOMAXPROCS(0); i++ {
+	for range runtime.GOMAXPROCS(0) {
 		go d.downloadWorker(ctx, reqCh)
 	}
 	return d

@@ -71,7 +71,7 @@ func (kbr *Registry) Run(e KeyEvent) {
 		}
 		return
 	}
-	for i := 0; i < kbr.repeat; i++ {
+	for range kbr.repeat {
 		if err := callback(); err != nil {
 			log.Println("ERROR:", err)
 			break

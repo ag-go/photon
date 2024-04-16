@@ -26,7 +26,7 @@ var (
 )
 
 func init() {
-	for i := 0; i < runtime.GOMAXPROCS(0); i++ {
+	for range runtime.GOMAXPROCS(0) {
 		go imageProcWorker()
 	}
 }

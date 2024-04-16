@@ -60,7 +60,7 @@ func (g *Grid) Draw(ctx Context, s tcell.Screen, sixelScreen *imgproc.SixelScree
 		}
 	}
 	// set all not visible cards previous position outside
-	for i := 0; i < len(photon.VisibleCards); i++ {
+	for i := range photon.VisibleCards {
 		if i >= g.FirstChildIndex && i <= g.LastChildIndex {
 			continue
 		}

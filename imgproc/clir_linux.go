@@ -132,7 +132,7 @@ func (ir *ImageResizerOpenCL) ResizePaletted(p, maxWidth, maxHeight uint) (*imag
 		return nil, fmt.Errorf("opencl error: %d", ret)
 	}
 	palette := make([]color.Color, p)
-	for i := 0; i < int(p); i++ {
+	for i := range int(p) {
 		palette[i] = color.RGBA{
 			R: paletteData[i*4],
 			G: paletteData[i*4+1],

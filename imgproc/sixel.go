@@ -60,7 +60,7 @@ func (ss *SixelScreen) append(d []byte) {
 }
 
 func (ss *SixelScreen) Write(w io.Writer) {
-	for i := 0; i < ss.length; i++ {
+	for i := range ss.length {
 		if _, err := w.Write(ss.data[i]); err != nil {
 			log.Println(err)
 		}

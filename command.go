@@ -8,7 +8,7 @@ import (
 )
 
 func drawCommand(ctx Context, s tcell.Screen) {
-	for i := 0; i < int(ctx.Cols); i++ {
+	for i := range int(ctx.Cols) {
 		s.SetContent(i, int(ctx.Rows)-1, ' ', nil, tcell.StyleDefault)
 	}
 	drawLine(

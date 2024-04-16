@@ -184,7 +184,7 @@ func feedCategories(L *lua.LState) int {
 	if L.GetTop() == 2 {
 		cs := L.CheckTable(2)
 		categories := make([]string, cs.Len())
-		for i := 0; i < cs.Len(); i++ {
+		for i := range cs.Len() {
 			v := cs.RawGetInt(i + 1)
 			categories[i] = lua.LVAsString(v)
 		}
